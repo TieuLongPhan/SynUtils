@@ -1,0 +1,228 @@
+2024-08-29 14:21:03,255 - INFO - DROP CLASS RATIO 0.05
+2024-08-29 14:21:09,283 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:21:09,910 - INFO - Partition data using stratify approach
+2024-08-29 14:21:10,173 - INFO - Train model...
+2024-08-29 14:23:40,721 - INFO - Evaluation...
+2024-08-29 14:23:46,369 - INFO - MCC_original: 0.9341941585174421
+2024-08-29 14:23:46,375 - INFO - MCC_calibrated: 0.8433538859247134
+2024-08-29 14:23:46,379 - INFO - MCC_certainty: 0.9896139503007725
+2024-08-29 14:23:46,465 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:23:46,467 - INFO - F1_calibrated_novelty: 0.84875
+2024-08-29 14:23:46,467 - INFO - Threshold: 0.1593790420706205
+2024-08-29 14:23:46,468 - INFO - Results for 0.05: {'Threshold': 0.1593790420706205, 'MCC_original': 0.9341941585174421, 'MCC_calibrated': 0.8433538859247134, 'MCC_certainty': 0.9896139503007725, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.84875}
+2024-08-29 14:23:46,468 - INFO - DROP CLASS RATIO 0.1
+2024-08-29 14:23:52,261 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:23:52,922 - INFO - Partition data using stratify approach
+2024-08-29 14:23:53,196 - INFO - Train model...
+2024-08-29 14:26:05,134 - INFO - Evaluation...
+2024-08-29 14:26:10,402 - INFO - MCC_original: 0.8828220974500053
+2024-08-29 14:26:10,408 - INFO - MCC_calibrated: 0.8515557170080337
+2024-08-29 14:26:10,413 - INFO - MCC_certainty: 0.9622079366584919
+2024-08-29 14:26:10,603 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:26:10,606 - INFO - F1_calibrated_novelty: 0.69675
+2024-08-29 14:26:10,606 - INFO - Threshold: 0.1300285274422259
+2024-08-29 14:26:10,607 - INFO - Results for 0.1: {'Threshold': 0.1300285274422259, 'MCC_original': 0.8828220974500053, 'MCC_calibrated': 0.8515557170080337, 'MCC_certainty': 0.9622079366584919, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.69675}
+2024-08-29 14:26:10,607 - INFO - DROP CLASS RATIO 0.15000000000000002
+2024-08-29 14:26:18,195 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:26:19,082 - INFO - Partition data using stratify approach
+2024-08-29 14:26:19,378 - INFO - Train model...
+2024-08-29 14:28:18,920 - INFO - Evaluation...
+2024-08-29 14:28:25,970 - INFO - MCC_original: 0.8473644709810452
+2024-08-29 14:28:25,976 - INFO - MCC_calibrated: 0.8582929426954985
+2024-08-29 14:28:25,981 - INFO - MCC_certainty: 0.9635400589446806
+2024-08-29 14:28:26,340 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:28:26,343 - INFO - F1_calibrated_novelty: 0.7996428571428571
+2024-08-29 14:28:26,343 - INFO - Threshold: 0.12868256892922364
+2024-08-29 14:28:26,346 - INFO - Results for 0.15000000000000002: {'Threshold': 0.12868256892922364, 'MCC_original': 0.8473644709810452, 'MCC_calibrated': 0.8582929426954985, 'MCC_certainty': 0.9635400589446806, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.7996428571428571}
+2024-08-29 14:28:26,347 - INFO - DROP CLASS RATIO 0.2
+2024-08-29 14:28:32,779 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:28:33,433 - INFO - Partition data using stratify approach
+2024-08-29 14:28:33,715 - INFO - Train model...
+2024-08-29 14:30:28,235 - INFO - Evaluation...
+2024-08-29 14:30:34,865 - INFO - MCC_original: 0.7954491798475631
+2024-08-29 14:30:34,871 - INFO - MCC_calibrated: 0.8496564061731191
+2024-08-29 14:30:34,876 - INFO - MCC_certainty: 0.9483571408358538
+2024-08-29 14:30:35,242 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:30:35,248 - INFO - F1_calibrated_novelty: 0.81425
+2024-08-29 14:30:35,248 - INFO - Threshold: 0.12646082445699725
+2024-08-29 14:30:35,251 - INFO - Results for 0.2: {'Threshold': 0.12646082445699725, 'MCC_original': 0.7954491798475631, 'MCC_calibrated': 0.8496564061731191, 'MCC_certainty': 0.9483571408358538, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.81425}
+2024-08-29 14:30:35,251 - INFO - DROP CLASS RATIO 0.25
+2024-08-29 14:30:42,466 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:30:43,145 - INFO - Partition data using stratify approach
+2024-08-29 14:30:43,372 - INFO - Train model...
+2024-08-29 14:32:18,090 - INFO - Evaluation...
+2024-08-29 14:32:23,721 - INFO - MCC_original: 0.7631117147236012
+2024-08-29 14:32:23,726 - INFO - MCC_calibrated: 0.8549841454816617
+2024-08-29 14:32:23,730 - INFO - MCC_certainty: 0.9458955041727738
+2024-08-29 14:32:24,110 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:32:24,114 - INFO - F1_calibrated_novelty: 0.8526041666666667
+2024-08-29 14:32:24,114 - INFO - Threshold: 0.12958420736715168
+2024-08-29 14:32:24,116 - INFO - Results for 0.25: {'Threshold': 0.12958420736715168, 'MCC_original': 0.7631117147236012, 'MCC_calibrated': 0.8549841454816617, 'MCC_certainty': 0.9458955041727738, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.8526041666666667}
+2024-08-29 14:32:24,116 - INFO - DROP CLASS RATIO 0.3
+2024-08-29 14:32:30,008 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:32:30,651 - INFO - Partition data using stratify approach
+2024-08-29 14:32:30,855 - INFO - Train model...
+2024-08-29 14:33:52,973 - INFO - Evaluation...
+2024-08-29 14:33:58,527 - INFO - MCC_original: 0.7145502726638812
+2024-08-29 14:33:58,532 - INFO - MCC_calibrated: 0.853811014792632
+2024-08-29 14:33:58,536 - INFO - MCC_certainty: 0.9639911068509706
+2024-08-29 14:33:58,961 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:33:58,966 - INFO - F1_calibrated_novelty: 0.92825
+2024-08-29 14:33:58,966 - INFO - Threshold: 0.1635861683129534
+2024-08-29 14:33:58,968 - INFO - Results for 0.3: {'Threshold': 0.1635861683129534, 'MCC_original': 0.7145502726638812, 'MCC_calibrated': 0.853811014792632, 'MCC_certainty': 0.9639911068509706, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.92825}
+2024-08-29 14:33:58,968 - INFO - DROP CLASS RATIO 0.35000000000000003
+2024-08-29 14:34:04,626 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:34:05,281 - INFO - Partition data using stratify approach
+2024-08-29 14:34:05,460 - INFO - Train model...
+2024-08-29 14:35:20,803 - INFO - Evaluation...
+2024-08-29 14:35:28,096 - INFO - MCC_original: 0.6825887114096666
+2024-08-29 14:35:28,101 - INFO - MCC_calibrated: 0.8254274261317943
+2024-08-29 14:35:28,105 - INFO - MCC_certainty: 0.9287472119530007
+2024-08-29 14:35:28,578 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:35:28,583 - INFO - F1_calibrated_novelty: 0.8774264705882353
+2024-08-29 14:35:28,583 - INFO - Threshold: 0.16354070947928706
+2024-08-29 14:35:28,585 - INFO - Results for 0.35000000000000003: {'Threshold': 0.16354070947928706, 'MCC_original': 0.6825887114096666, 'MCC_calibrated': 0.8254274261317943, 'MCC_certainty': 0.9287472119530007, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.8774264705882353}
+2024-08-29 14:35:28,585 - INFO - DROP CLASS RATIO 0.4
+2024-08-29 14:35:36,023 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:35:36,743 - INFO - Partition data using stratify approach
+2024-08-29 14:35:36,913 - INFO - Train model...
+2024-08-29 14:36:43,443 - INFO - Evaluation...
+2024-08-29 14:36:50,298 - INFO - MCC_original: 0.6556399862040148
+2024-08-29 14:36:50,304 - INFO - MCC_calibrated: 0.844793173992272
+2024-08-29 14:36:50,308 - INFO - MCC_certainty: 0.8914202947522641
+2024-08-29 14:36:50,843 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:36:50,848 - INFO - F1_calibrated_novelty: 0.8165789473684211
+2024-08-29 14:36:50,848 - INFO - Threshold: 0.09880301611117476
+2024-08-29 14:36:50,850 - INFO - Results for 0.4: {'Threshold': 0.09880301611117476, 'MCC_original': 0.6556399862040148, 'MCC_calibrated': 0.844793173992272, 'MCC_certainty': 0.8914202947522641, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.8165789473684211}
+2024-08-29 14:36:50,850 - INFO - DROP CLASS RATIO 0.45
+2024-08-29 14:36:56,747 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:36:57,385 - INFO - Partition data using stratify approach
+2024-08-29 14:36:57,532 - INFO - Train model...
+2024-08-29 14:37:50,059 - INFO - Evaluation...
+2024-08-29 14:37:56,150 - INFO - MCC_original: 0.6090781124670661
+2024-08-29 14:37:56,154 - INFO - MCC_calibrated: 0.8397033735625997
+2024-08-29 14:37:56,158 - INFO - MCC_certainty: 0.884432887185387
+2024-08-29 14:37:56,713 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:37:56,721 - INFO - F1_calibrated_novelty: 0.8466477272727273
+2024-08-29 14:37:56,721 - INFO - Threshold: 0.105895357986557
+2024-08-29 14:37:56,724 - INFO - Results for 0.45: {'Threshold': 0.105895357986557, 'MCC_original': 0.6090781124670661, 'MCC_calibrated': 0.8397033735625997, 'MCC_certainty': 0.884432887185387, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.8466477272727273}
+2024-08-29 14:37:56,724 - INFO - DROP CLASS RATIO 0.5
+2024-08-29 14:38:02,492 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:38:03,137 - INFO - Partition data using stratify approach
+2024-08-29 14:38:03,292 - INFO - Train model...
+2024-08-29 14:38:47,060 - INFO - Evaluation...
+2024-08-29 14:38:52,538 - INFO - MCC_original: 0.5802905931631231
+2024-08-29 14:38:52,542 - INFO - MCC_calibrated: 0.8596381201450173
+2024-08-29 14:38:52,546 - INFO - MCC_certainty: 0.8998765927326442
+2024-08-29 14:38:53,094 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:38:53,103 - INFO - F1_calibrated_novelty: 0.8897916666666666
+2024-08-29 14:38:53,128 - INFO - Threshold: 0.10492468833445744
+2024-08-29 14:38:53,131 - INFO - Results for 0.5: {'Threshold': 0.10492468833445744, 'MCC_original': 0.5802905931631231, 'MCC_calibrated': 0.8596381201450173, 'MCC_certainty': 0.8998765927326442, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.8897916666666666}
+2024-08-29 14:38:53,131 - INFO - DROP CLASS RATIO 0.55
+2024-08-29 14:38:59,024 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:38:59,706 - INFO - Partition data using stratify approach
+2024-08-29 14:38:59,830 - INFO - Train model...
+2024-08-29 14:39:34,999 - INFO - Evaluation...
+2024-08-29 14:39:39,741 - INFO - MCC_original: 0.5390664612315749
+2024-08-29 14:39:39,746 - INFO - MCC_calibrated: 0.8538463534547782
+2024-08-29 14:39:39,749 - INFO - MCC_certainty: 0.8769578293603982
+2024-08-29 14:39:40,338 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:39:40,349 - INFO - F1_calibrated_novelty: 0.8911111111111111
+2024-08-29 14:39:40,349 - INFO - Threshold: 0.0929624384328507
+2024-08-29 14:39:40,352 - INFO - Results for 0.55: {'Threshold': 0.0929624384328507, 'MCC_original': 0.5390664612315749, 'MCC_calibrated': 0.8538463534547782, 'MCC_certainty': 0.8769578293603982, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.8911111111111111}
+2024-08-29 14:39:40,352 - INFO - DROP CLASS RATIO 0.6000000000000001
+2024-08-29 14:39:46,064 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:39:46,699 - INFO - Partition data using stratify approach
+2024-08-29 14:39:46,799 - INFO - Train model...
+2024-08-29 14:40:15,861 - INFO - Evaluation...
+2024-08-29 14:40:20,150 - INFO - MCC_original: 0.5013531468322641
+2024-08-29 14:40:20,155 - INFO - MCC_calibrated: 0.7583348126874758
+2024-08-29 14:40:20,159 - INFO - MCC_certainty: 0.7226312529723593
+2024-08-29 14:40:20,676 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:40:20,685 - INFO - F1_calibrated_novelty: 0.699396551724138
+2024-08-29 14:40:20,685 - INFO - Threshold: 0.03856744708582016
+2024-08-29 14:40:20,687 - INFO - Results for 0.6000000000000001: {'Threshold': 0.03856744708582016, 'MCC_original': 0.5013531468322641, 'MCC_calibrated': 0.7583348126874758, 'MCC_certainty': 0.7226312529723593, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.699396551724138}
+2024-08-29 14:40:20,687 - INFO - DROP CLASS RATIO 0.6500000000000001
+2024-08-29 14:40:26,698 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:40:27,371 - INFO - Partition data using stratify approach
+2024-08-29 14:40:27,457 - INFO - Train model...
+2024-08-29 14:40:50,980 - INFO - Evaluation...
+2024-08-29 14:40:54,772 - INFO - MCC_original: 0.45540286866749574
+2024-08-29 14:40:54,776 - INFO - MCC_calibrated: 0.7346419874807618
+2024-08-29 14:40:54,780 - INFO - MCC_certainty: 0.6814274520916938
+2024-08-29 14:40:55,487 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:40:55,498 - INFO - F1_calibrated_novelty: 0.7076953125
+2024-08-29 14:40:55,498 - INFO - Threshold: 0.029971820071201465
+2024-08-29 14:40:55,501 - INFO - Results for 0.6500000000000001: {'Threshold': 0.029971820071201465, 'MCC_original': 0.45540286866749574, 'MCC_calibrated': 0.7346419874807618, 'MCC_certainty': 0.6814274520916938, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.7076953125}
+2024-08-29 14:40:55,501 - INFO - DROP CLASS RATIO 0.7000000000000001
+2024-08-29 14:41:02,732 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:41:03,380 - INFO - Partition data using stratify approach
+2024-08-29 14:41:03,453 - INFO - Train model...
+2024-08-29 14:41:22,832 - INFO - Evaluation...
+2024-08-29 14:41:26,295 - INFO - MCC_original: 0.4226766551661818
+2024-08-29 14:41:26,299 - INFO - MCC_calibrated: 0.6609208822294271
+2024-08-29 14:41:26,303 - INFO - MCC_certainty: 0.5984655539211732
+2024-08-29 14:41:26,797 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:41:26,806 - INFO - F1_calibrated_novelty: 0.6210661764705883
+2024-08-29 14:41:26,806 - INFO - Threshold: 0.029825218447173618
+2024-08-29 14:41:26,809 - INFO - Results for 0.7000000000000001: {'Threshold': 0.029825218447173618, 'MCC_original': 0.4226766551661818, 'MCC_calibrated': 0.6609208822294271, 'MCC_certainty': 0.5984655539211732, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.6210661764705883}
+2024-08-29 14:41:26,809 - INFO - DROP CLASS RATIO 0.7500000000000001
+2024-08-29 14:41:32,542 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:41:33,316 - INFO - Partition data using stratify approach
+2024-08-29 14:41:33,376 - INFO - Train model...
+2024-08-29 14:41:46,703 - INFO - Evaluation...
+2024-08-29 14:41:49,209 - INFO - MCC_original: 0.37398694225532275
+2024-08-29 14:41:49,213 - INFO - MCC_calibrated: 0.6422304092338768
+2024-08-29 14:41:49,216 - INFO - MCC_certainty: 0.5665146792125259
+2024-08-29 14:41:49,660 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:41:49,673 - INFO - F1_calibrated_novelty: 0.6697297297297298
+2024-08-29 14:41:49,673 - INFO - Threshold: 0.030187330709244866
+2024-08-29 14:41:49,676 - INFO - Results for 0.7500000000000001: {'Threshold': 0.030187330709244866, 'MCC_original': 0.37398694225532275, 'MCC_calibrated': 0.6422304092338768, 'MCC_certainty': 0.5665146792125259, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.6697297297297298}
+2024-08-29 14:41:49,676 - INFO - DROP CLASS RATIO 0.8
+2024-08-29 14:41:55,587 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:41:56,308 - INFO - Partition data using stratify approach
+2024-08-29 14:41:56,353 - INFO - Train model...
+2024-08-29 14:42:06,499 - INFO - Evaluation...
+2024-08-29 14:42:08,347 - INFO - MCC_original: 0.34134030614635164
+2024-08-29 14:42:08,352 - INFO - MCC_calibrated: 0.6335710178374708
+2024-08-29 14:42:08,354 - INFO - MCC_certainty: 0.5446817015713392
+2024-08-29 14:42:08,790 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:42:08,803 - INFO - F1_calibrated_novelty: 0.7000320512820513
+2024-08-29 14:42:08,803 - INFO - Threshold: 0.01570324414720139
+2024-08-29 14:42:08,806 - INFO - Results for 0.8: {'Threshold': 0.01570324414720139, 'MCC_original': 0.34134030614635164, 'MCC_calibrated': 0.6335710178374708, 'MCC_certainty': 0.5446817015713392, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.7000320512820513}
+2024-08-29 14:42:08,807 - INFO - DROP CLASS RATIO 0.8500000000000001
+2024-08-29 14:42:14,999 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:42:15,934 - INFO - Partition data using stratify approach
+2024-08-29 14:42:15,978 - INFO - Train model...
+2024-08-29 14:42:21,353 - INFO - Evaluation...
+2024-08-29 14:42:23,172 - INFO - MCC_original: 0.2851919858996399
+2024-08-29 14:42:23,177 - INFO - MCC_calibrated: 0.5456096886692423
+2024-08-29 14:42:23,180 - INFO - MCC_certainty: 0.45084627680370104
+2024-08-29 14:42:23,653 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:42:23,666 - INFO - F1_calibrated_novelty: 0.6676785714285715
+2024-08-29 14:42:23,667 - INFO - Threshold: 0.012415345505190353
+2024-08-29 14:42:23,672 - INFO - Results for 0.8500000000000001: {'Threshold': 0.012415345505190353, 'MCC_original': 0.2851919858996399, 'MCC_calibrated': 0.5456096886692423, 'MCC_certainty': 0.45084627680370104, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.6676785714285715}
+2024-08-29 14:42:23,672 - INFO - DROP CLASS RATIO 0.9000000000000001
+2024-08-29 14:42:31,442 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:42:32,315 - INFO - Partition data using stratify approach
+2024-08-29 14:42:32,342 - INFO - Train model...
+2024-08-29 14:42:35,571 - INFO - Evaluation...
+2024-08-29 14:42:36,804 - INFO - MCC_original: 0.24675303811642582
+2024-08-29 14:42:36,808 - INFO - MCC_calibrated: 0.3468445855034963
+2024-08-29 14:42:36,810 - INFO - MCC_certainty: 0.3009502290579004
+2024-08-29 14:42:37,146 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:42:37,163 - INFO - F1_calibrated_novelty: 0.37207386363636363
+2024-08-29 14:42:37,163 - INFO - Threshold: 0.00573431158852248
+2024-08-29 14:42:37,167 - INFO - Results for 0.9000000000000001: {'Threshold': 0.00573431158852248, 'MCC_original': 0.24675303811642582, 'MCC_calibrated': 0.3468445855034963, 'MCC_certainty': 0.3009502290579004, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.37207386363636363}
+2024-08-29 14:42:37,167 - INFO - DROP CLASS RATIO 0.9500000000000001
+2024-08-29 14:42:44,245 - INFO - Partition data using stratify reduction approach
+2024-08-29 14:42:44,915 - INFO - Partition data using stratify approach
+2024-08-29 14:42:44,930 - INFO - Train model...
+2024-08-29 14:42:46,016 - INFO - Evaluation...
+2024-08-29 14:42:46,798 - INFO - MCC_original: 0.15622999394541084
+2024-08-29 14:42:46,803 - INFO - MCC_calibrated: 0.18264626962073724
+2024-08-29 14:42:46,806 - INFO - MCC_certainty: 0.16756922661407805
+2024-08-29 14:42:47,113 - INFO - F1_original_novelty: 0.0
+2024-08-29 14:42:47,132 - INFO - F1_calibrated_novelty: 0.1426595744680851
+2024-08-29 14:42:47,132 - INFO - Threshold: 0.006971721384260388
+2024-08-29 14:42:47,139 - INFO - Results for 0.9500000000000001: {'Threshold': 0.006971721384260388, 'MCC_original': 0.15622999394541084, 'MCC_calibrated': 0.18264626962073724, 'MCC_certainty': 0.16756922661407805, 'F1_original_novelty': 0.0, 'F1_calibrated_novelty': 0.1426595744680851}
