@@ -9,5 +9,4 @@ split_comparison.py
 fp.py
 
 *.json
-Data/Split/data_embedding.npz
 split_benchmark_process.py
