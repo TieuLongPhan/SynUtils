@@ -5,6 +5,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
+from copy import deepcopy
 from synutils.Analysis.metrics import Metrics
 import numpy as np
 
@@ -134,9 +135,9 @@ class SplitBenchmark:
         n_jobs: int = 3,
         verbose: int = 0,
         methods: List[str] = [
+            "stratified_class_reduction",
             "random",
             "stratified_target",
-            "stratified_class_reduction",
         ],
     ) -> Dict[str, List[Dict[str, Any]]]:
         """Executes the benchmarking across different partition methods.
@@ -157,7 +158,7 @@ class SplitBenchmark:
             method_results = Parallel(n_jobs=n_jobs, verbose=verbose)(
                 delayed(self.process_method)(
                     seed,
-                    self.data,
+                    deepcopy(self.data),
                     self.test_size,
                     self.class_column,
                     method,
