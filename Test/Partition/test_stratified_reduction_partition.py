@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from synutils.Partition.stratified_reduction_partition import (
+from synutility.Partition.stratified_reduction_partition import (
     StratifiedReductionPartition,
 )
 

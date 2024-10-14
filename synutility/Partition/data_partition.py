@@ -1,11 +1,11 @@
 from typing import Tuple, Union
 import pandas as pd
-from synutils.Partition.random_parition import RandomPartition
-from synutils.Partition.stratified_partition import StratifiedPartition
-from synutils.Partition.stratified_reduction_partition import (
+from synutility.Partition.random_parition import RandomPartition
+from synutility.Partition.stratified_partition import StratifiedPartition
+from synutility.Partition.stratified_reduction_partition import (
     StratifiedReductionPartition,
 )
-from synutils.utils import setup_logging
+from synutility.utils import setup_logging
 
 logger = setup_logging()
 

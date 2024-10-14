@@ -1,7 +1,7 @@
 import unittest
 import pandas as pd
 
-from synutils.Partition.random_parition import RandomPartition
+from synutility.Partition.random_parition import RandomPartition
 
 
 class TestRandomPartition(unittest.TestCase):

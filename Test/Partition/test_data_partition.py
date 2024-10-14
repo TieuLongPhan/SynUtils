@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from synutils.Partition.data_partition import DataPartition
+from synutility.Partition.data_partition import DataPartition
 
 
 class TestDataPartition(unittest.TestCase):

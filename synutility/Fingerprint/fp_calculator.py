@@ -3,8 +3,8 @@ import numpy as np
 from drfp import DrfpEncoder
 from joblib import Parallel, delayed
 from typing import Optional
-from synutils.utils import setup_logging
-from synutils.Fingerprint.transformation_fp import TransformationFP
+from synutility.utils import setup_logging
+from synutility.Fingerprint.transformation_fp import TransformationFP
 
 
 class FPCalculator:

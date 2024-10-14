@@ -2,7 +2,7 @@ import unittest
 import pandas as pd
 import numpy as np
 
-from synutils.Partition.stratified_partition import StratifiedPartition
+from synutility.Partition.stratified_partition import StratifiedPartition
 
 
 class TestStratifiedPartition(unittest.TestCase):
