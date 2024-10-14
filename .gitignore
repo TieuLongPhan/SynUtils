@@ -7,5 +7,6 @@ test.py
 rebalance_test.py
 split_comparison.py
 fp.py
-*.npz
+
 *.json
+split_benchmark_process.py
