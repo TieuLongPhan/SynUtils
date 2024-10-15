@@ -2,10 +2,10 @@ import unittest
 import pandas as pd
 import numpy as np
 
-from synutility.Partition.stratified_partition import StratifiedPartition
+from synutility.synsplit.stratified_split import StratifiedSplit
 
 
-class TestStratifiedPartition(unittest.TestCase):
+class TestStratifiedSplit(unittest.TestCase):
     def setUp(self):
         # Sample data setup
         self.data = pd.DataFrame(
@@ -21,7 +21,7 @@ class TestStratifiedPartition(unittest.TestCase):
         self.random_state = 42
 
         # Instantiate StratifiedPartition
-        self.strat_partition = StratifiedPartition(
+        self.strat_partition = StratifiedSplit(
             data=self.data,
             test_size=self.test_size,
             class_column=self.class_column,
@@ -36,7 +36,7 @@ class TestStratifiedPartition(unittest.TestCase):
 
     def test_constructor_raises_for_invalid_class_column(self):
         with self.assertRaises(ValueError):
-            StratifiedPartition(
+            StratifiedSplit(
                 data=pd.DataFrame({"feature": [1, 2, 3]}),
                 test_size=0.25,
                 class_column="nonexistent",
@@ -45,14 +45,14 @@ class TestStratifiedPartition(unittest.TestCase):
 
     def test_constructor_raises_for_invalid_test_size(self):
         with self.assertRaises(ValueError):
-            StratifiedPartition(
+            StratifiedSplit(
                 data=self.data,
                 test_size=-0.1,
                 class_column=self.class_column,
                 random_state=42,
             )
         with self.assertRaises(ValueError):
-            StratifiedPartition(
+            StratifiedSplit(
                 data=self.data,
                 test_size=1.5,
                 class_column=self.class_column,

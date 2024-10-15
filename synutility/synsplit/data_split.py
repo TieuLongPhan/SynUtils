@@ -1,16 +1,17 @@
 from typing import Tuple, Union
 import pandas as pd
-from synutility.Partition.random_parition import RandomPartition
-from synutility.Partition.stratified_partition import StratifiedPartition
-from synutility.Partition.stratified_reduction_partition import (
-    StratifiedReductionPartition,
+from synutility.synsplit.random_split import RandomSplit
+from synutility.synsplit.stratified_split import StratifiedSplit
+from synutility.synsplit.stratified_reduction_partition import (
+    StratifiedReductionSplit,
 )
+from synutility.synsplit.rc_split import RCSplit
 from synutility.utils import setup_logging
 
 logger = setup_logging()
 
 
-class DataPartition:
+class DataSplit:
     """
     Class for partitioning a dataset into training and testing sets using various
     partitioning methods.
@@ -79,7 +80,7 @@ class DataPartition:
         """
         if self.method == "random":
             logger.info("Partition data using random approach")
-            splitter = RandomPartition(
+            splitter = RandomSplit(
                 data=self.data,
                 test_size=self.test_size,
                 class_column=self.class_column,
@@ -89,7 +90,7 @@ class DataPartition:
             return splitter.fit()
         elif self.method == "stratified_target":
             logger.info("Partition data using stratify approach")
-            splitter = StratifiedPartition(
+            splitter = StratifiedSplit(
                 data=self.data,
                 test_size=self.test_size,
                 class_column=self.class_column,
@@ -98,7 +99,7 @@ class DataPartition:
             return splitter.fit()
         elif self.method == "stratified_class_reduction":
             logger.info("Partition data using stratify reduction approach")
-            splitter = StratifiedReductionPartition(
+            splitter = StratifiedReductionSplit(
                 data=self.data,
                 test_size=self.test_size,
                 class_column=self.class_column,
@@ -107,6 +108,15 @@ class DataPartition:
                 keep_data=self.keep_data,
             )
 
+            return splitter.fit()
+        elif self.method == "rc_split":
+            logger.info("Partition data using reaction center approach")
+            splitter = RCSplit(
+                data=self.data,
+                test_size=self.test_size,
+                class_column=self.class_column,
+                random_state=self.random_state,
+            )
             return splitter.fit()
         else:
             logger.error(

@@ -39,7 +39,7 @@ class TransformationFP:
         fp_type: str,
         abs: bool,
         return_array: bool = True,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> Union[np.ndarray, cDataStructs.ExplicitBitVect]:
         """
         Generates a reaction fingerprint for a given reaction represented by a SMILES string.

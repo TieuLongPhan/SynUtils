@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from synutility.Visualization.embedding import Embedding
+from synutility.synvis.embedding import Embedding
 
 
 class TestEmbedding(unittest.TestCase):

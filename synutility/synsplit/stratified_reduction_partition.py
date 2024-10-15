@@ -2,10 +2,10 @@ import random
 import pandas as pd
 from typing import Tuple
 from sklearn.preprocessing import LabelEncoder
-from synutility.Partition.stratified_partition import StratifiedPartition
+from synutility.synsplit.stratified_split import StratifiedSplit
 
 
-class StratifiedReductionPartition:
+class StratifiedReductionSplit:
     """
     A class for partitioning a dataset into training and test sets with the additional
     functionality of selectively reducing the presence of certain classes based
@@ -82,7 +82,7 @@ class StratifiedReductionPartition:
         selected classes removed, the test data, and the subset of the training data that
         contains the removed classes.
         """
-        splitter = StratifiedPartition(
+        splitter = StratifiedSplit(
             self.data, self.test_size, self.class_column, self.random_state
         )
         data_train, data_test = splitter.fit()
