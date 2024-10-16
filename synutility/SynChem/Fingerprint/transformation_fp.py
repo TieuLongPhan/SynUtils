@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Union, Any
 from rdkit.DataStructs import cDataStructs
-from synutility.Fingerprint.smiles_featurizer import SmilesFeaturizer
+from synutility.SynChem.Fingerprint.smiles_featurizer import SmilesFeaturizer
 
 
 class TransformationFP:

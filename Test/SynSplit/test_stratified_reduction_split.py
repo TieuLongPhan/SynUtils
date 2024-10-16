@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from synutility.synsplit.stratified_reduction_partition import (
+from synutility.SynSplit.stratified_reduction_partition import (
     StratifiedReductionSplit,
 )
 

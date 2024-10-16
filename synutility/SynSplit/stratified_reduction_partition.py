@@ -2,7 +2,7 @@ import random
 import pandas as pd
 from typing import Tuple
 from sklearn.preprocessing import LabelEncoder
-from synutility.synsplit.stratified_split import StratifiedSplit
+from synutility.SynSplit.stratified_split import StratifiedSplit
 
 
 class StratifiedReductionSplit:

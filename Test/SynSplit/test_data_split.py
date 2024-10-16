@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from synutility.synsplit.data_split import DataSplit
+from synutility.SynSplit.data_split import DataSplit
 
 
 class TestDataSplit(unittest.TestCase):

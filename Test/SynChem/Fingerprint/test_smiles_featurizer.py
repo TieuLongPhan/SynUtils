@@ -3,7 +3,7 @@ from rdkit import Chem, DataStructs
 from rdkit.Chem import MACCSkeys
 import numpy as np
 
-from synutility.Fingerprint.smiles_featurizer import SmilesFeaturizer
+from synutility.SynChem.Fingerprint.smiles_featurizer import SmilesFeaturizer
 
 
 class TestSmilesFeaturizer(unittest.TestCase):

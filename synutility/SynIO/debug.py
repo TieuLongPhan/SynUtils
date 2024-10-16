@@ -1,12 +1,7 @@
 import os
-import json
 import logging
 import warnings
-import numpy as np
-from numpy import ndarray
 from rdkit import rdBase
-from joblib import dump, load
-from typing import Any
 
 
 def setup_logging(log_level: str = "INFO", log_filename: str = None) -> logging.Logger:
@@ -46,7 +41,7 @@ def setup_logging(log_level: str = "INFO", log_filename: str = None) -> logging.
     if log_filename:
         os.makedirs(os.path.dirname(log_filename), exist_ok=True)
         logging.basicConfig(
-            level=numeric_level, format=log_format, filename=log_filename, filemode="w"
+            level=numeric_level, format=log_format, filename=log_filename, filemode="a"
         )
     else:
         logging.basicConfig(level=numeric_level, format=log_format)
@@ -93,115 +88,3 @@ def configure_warnings_and_logs(
         # Enable RDKit error and warning logs if they were previously disabled
         rdBase.EnableLog("rdApp.error")
         rdBase.EnableLog("rdApp.warning")
-
-
-def save_compressed(array: ndarray, filename: str) -> None:
-    """
-    Saves a NumPy array in a compressed format using .npz extension.
-
-    Parameters:
-    - array (ndarray): The NumPy array to be saved.
-    - filename (str): The file path or name to save the array to,
-    with a '.npz' extension.
-
-    Returns:
-    - None: This function does not return any value.
-    """
-    np.savez_compressed(filename, array=array)
-
-
-def load_compressed(filename: str) -> ndarray:
-    """
-    Loads a NumPy array from a compressed .npz file.
-
-    Parameters:
-    - filename (str): The path of the .npz file to load.
-
-    Returns:
-    - ndarray: The loaded NumPy array.
-
-    Raises:
-    - KeyError: If the .npz file does not contain an array with the key 'array'.
-    """
-    with np.load(filename) as data:
-        if "array" in data:
-            return data["array"]
-        else:
-            raise KeyError(
-                "The .npz file does not contain" + " an array with the key 'array'."
-            )
-
-
-def save_model(model: Any, filename: str) -> None:
-    """
-    Save a machine learning model to a file using joblib.
-
-    Parameters:
-    - model (Any): The machine learning model to save.
-    - filename (str): The path to the file where the model will be saved.
-    """
-    dump(model, filename)
-    logging.info(f"Model saved successfully to {filename}")
-
-
-def load_model(filename: str) -> Any:
-    """
-    Load a machine learning model from a file using joblib.
-
-    Parameters:
-    - filename (str): The path to the file from which the model will be loaded.
-
-    Returns:
-    - Any: The loaded machine learning model.
-    """
-    model = load(filename)
-    logging.info(f"Model loaded successfully from {filename}")
-    return model
-
-
-def save_dict_to_json(data: dict, file_path: str) -> None:
-    """
-    Save a dictionary to a JSON file.
-
-    Parameters:
-    -----------
-    data : dict
-        The dictionary to be saved.
-
-    file_path : str
-        The path to the file where the dictionary should be saved.
-        Make sure the file has a .json extension.
-
-    Returns:
-    --------
-    None
-    """
-    with open(file_path, "w") as json_file:
-        json.dump(data, json_file, indent=4)
-
-    logging.info(f"Dictionary successfully saved to {file_path}")
-
-
-def load_dict_from_json(file_path: str) -> dict:
-    """
-    Load a dictionary from a JSON file.
-
-    Parameters:
-    -----------
-    file_path : str
-        The path to the JSON file from which to load the dictionary.
-        Make sure the file has a .json extension.
-
-    Returns:
-    --------
-    dict
-        The dictionary loaded from the JSON file.
-    """
-    try:
-        with open(file_path, "r") as json_file:
-            data = json.load(json_file)
-        logging.info(f"Dictionary successfully loaded from {file_path}")
-        return data
-    except Exception as e:
-        logging.error(e)
-        return None

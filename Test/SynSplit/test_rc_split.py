@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 import pandas as pd
-from synutility.synsplit.rc_split import RCSplit
+from synutility.SynSplit.rc_split import RCSplit
 
 
 class TestRCSplit(unittest.TestCase):

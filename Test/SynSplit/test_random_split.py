@@ -1,7 +1,7 @@
 import unittest
 import pandas as pd
 
-from synutility.synsplit.random_split import RandomSplit
+from synutility.SynSplit.random_split import RandomSplit
 
 
 class TestRandomSplit(unittest.TestCase):

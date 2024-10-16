@@ -2,7 +2,7 @@ import unittest
 import pandas as pd
 import numpy as np
 
-from synutility.synsplit.stratified_split import StratifiedSplit
+from synutility.SynSplit.stratified_split import StratifiedSplit
 
 
 class TestStratifiedSplit(unittest.TestCase):
