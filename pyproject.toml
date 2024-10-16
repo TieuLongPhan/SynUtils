@@ -18,13 +18,14 @@ classifiers = [
 ]
 dependencies = [
     "scikit-learn==1.5.1",
-    "xgboost==2.1.1",
     "pandas>=1.5.3",
     "rdkit>=2024.3.3",
     "networkx==3.3",
     "seaborn==0.13.2",
-    "drfp==0.3.6",
 ]
+
+[project.optional-dependencies]
+all = ["drfp==0.3.6", "xgboost==2.1.1"]
 
 [project.urls]
 homepage = "https://github.com/TieuLongPhan/SynUtils"

@@ -3,7 +3,7 @@ from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 
 
-class StratifiedPartition:
+class StratifiedSplit:
     """
     Class for partitioning data into training and test sets using stratified sampling based on
     the specified class column to maintain the proportion of classes in each subset.
@@ -19,7 +19,7 @@ class StratifiedPartition:
         self, data: DataFrame, test_size: float, class_column: str, random_state: int
     ) -> None:
         """
-        Initializes the StratifiedPartition instance with the given data and parameters.
+        Initializes the StratifiedSplit instance with the given data and parameters.
 
         Parameters:
             data (DataFrame): The dataset to be partitioned.

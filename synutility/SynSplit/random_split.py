@@ -2,7 +2,7 @@ from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 
 
-class RandomPartition:
+class RandomSplit:
     """
     Class for partitioning data into training and test sets based on specified class columns.
 
@@ -17,7 +17,7 @@ class RandomPartition:
         self, data: DataFrame, test_size: float, class_column: str, random_state: int
     ) -> None:
         """
-        Initializes the RandomPartition with the given data and parameters.
+        Initializes the RandomSplit with the given data and parameters.
 
         Parameters:
         - data (DataFrame): The dataset to be partitioned.

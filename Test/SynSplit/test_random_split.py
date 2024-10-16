@@ -1,10 +1,10 @@
 import unittest
 import pandas as pd
 
-from synutility.Partition.random_parition import RandomPartition
+from synutility.SynSplit.random_split import RandomSplit
 
 
-class TestRandomPartition(unittest.TestCase):
+class TestRandomSplit(unittest.TestCase):
     def setUp(self):
         # Sample data setup
         self.data = pd.DataFrame(
@@ -15,7 +15,7 @@ class TestRandomPartition(unittest.TestCase):
         self.random_state = 42
 
         # Instantiate RandomPartition
-        self.random_partition = RandomPartition(
+        self.random_partition = RandomSplit(
             data=self.data,
             test_size=self.test_size,
             class_column=self.class_column,

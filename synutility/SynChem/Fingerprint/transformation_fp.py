@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Union, Any
 from rdkit.DataStructs import cDataStructs
-from synutility.Fingerprint.smiles_featurizer import SmilesFeaturizer
+from synutility.SynChem.Fingerprint.smiles_featurizer import SmilesFeaturizer
 
 
 class TransformationFP:
@@ -39,7 +39,7 @@ class TransformationFP:
         fp_type: str,
         abs: bool,
         return_array: bool = True,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> Union[np.ndarray, cDataStructs.ExplicitBitVect]:
         """
         Generates a reaction fingerprint for a given reaction represented by a SMILES string.

@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from rdkit.DataStructs import cDataStructs
 
-from synutility.Fingerprint.transformation_fp import TransformationFP
+from synutility.SynChem.Fingerprint.transformation_fp import TransformationFP
 
 
 class TestTransformationFP(unittest.TestCase):

@@ -2,7 +2,7 @@ import unittest
 import pandas as pd
 import numpy as np
 
-from synutility.Fingerprint.fp_calculator import FPCalculator
+from synutility.SynChem.Fingerprint.fp_calculator import FPCalculator
 
 
 class TestFPCalculator(unittest.TestCase):

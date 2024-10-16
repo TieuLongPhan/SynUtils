@@ -1,11 +1,11 @@
 import unittest
 import pandas as pd
-from synutility.Partition.stratified_reduction_partition import (
-    StratifiedReductionPartition,
+from synutility.SynSplit.stratified_reduction_partition import (
+    StratifiedReductionSplit,
 )
 
 
-class TestStratifiedReductionPartition(unittest.TestCase):
+class TestStratifiedReductionSplit(unittest.TestCase):
 
     def setUp(self):
         # Sample data for testing
@@ -30,7 +30,7 @@ class TestStratifiedReductionPartition(unittest.TestCase):
                 ]
             }
         )
-        self.srp = StratifiedReductionPartition(
+        self.srp = StratifiedReductionSplit(
             data=data,
             test_size=0.2,
             drop_class_ratio=0.1,
@@ -47,7 +47,7 @@ class TestStratifiedReductionPartition(unittest.TestCase):
 
     def test_random_select(self):
         test_dict = {"A": 0.5, "B": 0.3, "C": 0.2}
-        selected = StratifiedReductionPartition.random_select(
+        selected = StratifiedReductionSplit.random_select(
             test_dict, 0.2, random_state=42
         )
         self.assertIn("C", selected)
