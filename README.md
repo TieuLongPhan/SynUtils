@@ -2,9 +2,9 @@
 
 **Utils for Synthesis Planning**
 
-SynUtils is a collection of tools designed to support the planning and execution of chemical synthesis. This repository provides computational resources and utilities aimed at enhancing the efficiency and accuracy of synthesis planning through the use of advanced algorithms and AI-driven models.
+SynUtils is a collection of tools designed to support the planning and execution of chemical synthesis. 
 
-![SynUtils](Docs/Figure/synutils.png)
+![SynUtils](https://raw.githubusercontent.com/TieuLongPhan/SynUtils/main/Docs/Figure/synutils.png)
 
 Our tools are tailored to assist researchers and chemists in navigating complex chemical reactions and synthesis pathways, leveraging the power of modern computational chemistry. Whether you're designing novel compounds or optimizing existing processes, SynUtils aims to provide the critical tools you need.
 
@@ -29,18 +29,21 @@ For more details on each utility within the repository, please refer to the docu
   conda activate synutils-env
   ```
 
-3. **Cloning and Installing SynUtils:**
-  Clone the SynUtils repository from GitHub and install it:
+3. **Install from PyPi:**
+  The easiest way to use SynTemp is by installing the PyPI package 
+  [syntemp](https://pypi.org/project/synutility/).
 
-  ```bash
-  git clone https://github.com/TieuLongPhan/SynUtils.git
-  cd SynUtils
-  pip install -r requirements.txt
-  pip install black flake8 pytest # black for formating, flake8 for checking format, pytest for testing
+  ```
+  pip install synutility
+  ```
+  Optional if you want to install full version
+  ```
+  pip install synutility[all]
   ```
 
+## For contributors
 
-## Setting Up Your Development Environment
+We're welcoming new contributors to build this project better. Please not hesitate to inquire me via [email][tieu@bioinf.uni-leipzig.de]
 
 Before you start, ensure your local development environment is set up correctly. Pull the latest version of the `main` branch to start with the most recent stable code.
 
@@ -97,4 +100,19 @@ git pull
 3. **Create a Pull Request**:
    Open a pull request from your feature branch to the `stagging` branch. Ensure the pull request description clearly describes the changes and any additional context necessary for review.
 
-## Important Notes
+## Contributing
+- [Tieu-Long Phan](https://tieulongphan.github.io/)
+- [Phuoc-Chung Nguyen Van](https://github.com/phuocchung123)
+
+## Deployment timeline
+
+We plan to update new version quarterly.
+
+
+## License
+
+This project is licensed under MIT License - see the [License](LICENSE) file for details.
+
+## Acknowledgments
+
+This project has received funding from the European Unions Horizon Europe Doctoral Network programme under the Marie-Skłodowska-Curie grant agreement No 101072930 ([TACsy](https://tacsy.eu/) -- Training Alliance for Computational)
