@@ -31,4 +31,4 @@ jobs:
           git config user.email "no@mail.tmp"
           git add -f docs/
           git commit -m "Doc build"
-          git push --force "https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/TieuLongPhan/SynUtils.git" `git subtree split --prefix docs/ main`:gh-pages
+          git push --force "https://github.com/TieuLongPhan/SynUtils.git" `git subtree split --prefix docs/ main`:gh-pages
