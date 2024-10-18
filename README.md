@@ -31,7 +31,7 @@ For more details on each utility within the repository, please refer to the docu
 
 3. **Install from PyPi:**
   The easiest way to use SynTemp is by installing the PyPI package 
-  [syntemp](https://pypi.org/project/synutility/).
+  [synutility](https://pypi.org/project/synutility/).
 
   ```
   pip install synutility
@@ -43,7 +43,7 @@ For more details on each utility within the repository, please refer to the docu
 
 ## For contributors
 
-We're welcoming new contributors to build this project better. Please not hesitate to inquire me via [email][tieu@bioinf.uni-leipzig.de]
+We're welcoming new contributors to build this project better. Please not hesitate to inquire me via [email][tieu@bioinf.uni-leipzig.de].
 
 Before you start, ensure your local development environment is set up correctly. Pull the latest version of the `main` branch to start with the most recent stable code.
 
