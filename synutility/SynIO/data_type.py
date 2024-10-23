@@ -1,9 +1,10 @@
+import os
 import json
 import pickle
 import numpy as np
 from numpy import ndarray
 from joblib import dump, load
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Generator
 from synutility.SynIO.debug import setup_logging
 
 logger = setup_logging()
@@ -211,3 +212,45 @@ def load_dict_from_json(file_path: str) -> dict:
     except Exception as e:
         logger.error(e)
         return None
+
+
+def load_from_pickle_generator(file_path: str) -> Generator[Any, None, None]:
+    """
+    A generator that yields items from a pickle file where each pickle load returns a list
+    of dictionaries.
+
+    Paremeters:
+    - file_path (str): The path to the pickle file to load.
+
+    - Yields:
+    Any: Yields a single item from the list of dictionaries stored in the pickle file.
+    """
+    with open(file_path, "rb") as file:
+        while True:
+            try:
+                batch_items = pickle.load(file)
+                for item in batch_items:
+                    yield item
+            except EOFError:
+                break
+
+
+def collect_data(num_batches: int, temp_dir: str, file_template: str) -> List[Any]:
+    """
+    Collects and aggregates data from multiple pickle files into a single list.
+
+    Paremeters:
+    - num_batches (int): The number of batch files to process.
+    - temp_dir (str): The directory where the batch files are stored.
+    - file_template (str): The template string for batch file names, expecting an integer
+    formatter.
+
+    Returns:
+    List[Any]: A list of aggregated data items from all batch files.
+    """
+    collected_data: List[Any] = []
+    for i in range(num_batches):
+        file_path = os.path.join(temp_dir, file_template.format(i))
+        for item in load_from_pickle_generator(file_path):
+            collected_data.append(item)
+    return collected_data
