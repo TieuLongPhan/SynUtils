@@ -8,7 +8,7 @@ version = "0.0.7"
 authors = [
     {name="Tieu Long Phan", email="tieu@bioinf.uni-leipzig.de"}
 ]
-description = "Graph-based reaction templates extraction"
+description = "Utility for reaction modeling using graph grammar"
 readme = "README.md"
 requires-python = ">=3.11"
 classifiers = [
