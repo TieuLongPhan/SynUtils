@@ -53,16 +53,6 @@ After setting up and activating your virtual environment, install **synutility**
 
 This command will download and install the latest version of **synutility** along with its required dependencies.
 
-Getting Started with **synutility**
-===================================
-
-After installation, you can begin using **synutility** by importing it into your Python scripts or interactive sessions. Here’s a quick example to get you started:
-
-.. code-block:: python
-
-   import synutility
-   result = synutility.example_function('Hello, World!')
-   print(result)
 
 Further Resources
 =================
