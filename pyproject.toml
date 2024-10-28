@@ -17,7 +17,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "scikit-learn==1.5.1",
+    "scikit-learn>=1.4.0",
     "pandas>=1.5.3",
     "rdkit>=2024.3.3",
     "networkx==3.3",

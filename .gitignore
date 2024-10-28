@@ -10,3 +10,4 @@ fp.py
 
 *.json
 split_benchmark_process.py
+synutility/SynChem/Reaction/misc.py
