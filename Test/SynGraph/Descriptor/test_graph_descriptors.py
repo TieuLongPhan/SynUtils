@@ -1,6 +1,6 @@
 import unittest
 import networkx as nx
-from synutility.SynGraph.graph_descriptors import GraphDescriptor
+from synutility.SynGraph.Descriptor.graph_descriptors import GraphDescriptor
 
 
 class TestGraphDescriptor(unittest.TestCase):
