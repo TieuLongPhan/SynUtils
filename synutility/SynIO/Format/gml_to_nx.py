@@ -120,7 +120,8 @@ class GMLToNX:
         'context' for ITS, and 'right' for products.
 
         Returns:
-        - Tuple[nx.Graph, nx.Graph, nx.Graph]: A tuple containing the graphs for reactants, products, and ITS.
+        - Tuple[nx.Graph, nx.Graph, nx.Graph]: A tuple containing the graphs for
+        reactants, products, and ITS.
         """
         current_section = None
         lines = self.gml_text.split("\n")
