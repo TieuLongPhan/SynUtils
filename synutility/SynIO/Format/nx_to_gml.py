@@ -2,7 +2,7 @@ import networkx as nx
 from typing import Tuple, Dict, List
 
 
-class NXTOGML:
+class NXToGML:
 
     def __init__(self) -> None:
         pass
@@ -86,7 +86,7 @@ class NXTOGML:
                 if node[0] not in changed_node_ids:
                     element = node[1].get("element", "X")
                     charge = node[1].get("charge", 0)
-                    charge_str = NXTOGML._charge_to_string(charge)
+                    charge_str = NXToGML._charge_to_string(charge)
                     gml_str += (
                         f'      node [ id {node[0]} label "{element}{charge_str}" ]\n'
                     )
@@ -99,7 +99,7 @@ class NXTOGML:
                 if node[0] in changed_node_ids:
                     element = node[1].get("element", "X")
                     charge = node[1].get("charge", 0)
-                    charge_str = NXTOGML._charge_to_string(charge)
+                    charge_str = NXToGML._charge_to_string(charge)
                     gml_str += (
                         f'      node [ id {node[0]} label "{element}{charge_str}" ]\n'
                     )
@@ -126,14 +126,14 @@ class NXTOGML:
         """
         gml_str = "rule [\n"
         gml_str += f'   ruleID "{rule_name}"\n'
-        gml_str += NXTOGML._convert_graph_to_gml(L, "left", changed_node_ids)
-        gml_str += NXTOGML._convert_graph_to_gml(K, "context", changed_node_ids)
-        gml_str += NXTOGML._convert_graph_to_gml(R, "right", changed_node_ids)
+        gml_str += NXToGML._convert_graph_to_gml(L, "left", changed_node_ids)
+        gml_str += NXToGML._convert_graph_to_gml(K, "context", changed_node_ids)
+        gml_str += NXToGML._convert_graph_to_gml(R, "right", changed_node_ids)
         gml_str += "]"
         return gml_str
 
     @staticmethod
-    def transform_graph_rules(
+    def transform(
         graph_rules: Tuple[nx.Graph, nx.Graph, nx.Graph],
         rule_name: str = "Test",
         reindex: bool = False,
@@ -163,6 +163,6 @@ class NXTOGML:
             L = nx.relabel_nodes(L, index_mapping)
             R = nx.relabel_nodes(R, index_mapping)
             K = nx.relabel_nodes(K, index_mapping)
-        changed_node_ids = NXTOGML._find_changed_nodes(L, R, attributes)
-        rule_grammar = NXTOGML._rule_grammar(L, R, K, rule_name, changed_node_ids)
+        changed_node_ids = NXToGML._find_changed_nodes(L, R, attributes)
+        rule_grammar = NXToGML._rule_grammar(L, R, K, rule_name, changed_node_ids)
         return rule_grammar

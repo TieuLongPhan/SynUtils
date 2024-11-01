@@ -1,7 +1,7 @@
 import unittest
 import networkx as nx
 from synutility.SynIO.data_type import load_from_pickle
-from synutility.SynIO.Format.nx_to_gml import NXTOGML
+from synutility.SynIO.Format.nx_to_gml import NXToGML
 
 
 class TestRuleWriting(unittest.TestCase):
@@ -10,16 +10,16 @@ class TestRuleWriting(unittest.TestCase):
         self.data = load_from_pickle("Data/test.pkl.gz")[0]
 
     def test_charge_to_string(self):
-        self.assertEqual(NXTOGML._charge_to_string(3), "3+")
-        self.assertEqual(NXTOGML._charge_to_string(-2), "2-")
-        self.assertEqual(NXTOGML._charge_to_string(0), "")
+        self.assertEqual(NXToGML._charge_to_string(3), "3+")
+        self.assertEqual(NXToGML._charge_to_string(-2), "2-")
+        self.assertEqual(NXToGML._charge_to_string(0), "")
 
     def test_find_changed_nodes(self):
         G1 = nx.Graph()
         G1.add_node(1, element="C", charge=0)
         G2 = nx.Graph()
         G2.add_node(1, element="C", charge=1)
-        changed_nodes = NXTOGML._find_changed_nodes(G1, G2, ["charge"])
+        changed_nodes = NXToGML._find_changed_nodes(G1, G2, ["charge"])
         self.assertEqual(changed_nodes, [1])
 
     def test_convert_graph_to_gml_context(self):
@@ -27,7 +27,7 @@ class TestRuleWriting(unittest.TestCase):
         G.add_node(1, element="C")
         G.add_node(2, element="H")
         changed_node_ids = [2]
-        gml_str = NXTOGML._convert_graph_to_gml(G, "context", changed_node_ids)
+        gml_str = NXToGML._convert_graph_to_gml(G, "context", changed_node_ids)
         expected_str = '   context [\n      node [ id 1 label "C" ]\n   ]\n'
         self.assertEqual(gml_str, expected_str)
 
@@ -37,7 +37,7 @@ class TestRuleWriting(unittest.TestCase):
         G.add_node(2, element="H", charge=0)
         G.add_edge(1, 2, order=2)
         changed_node_ids = [1]
-        gml_str = NXTOGML._convert_graph_to_gml(G, "left", changed_node_ids)
+        gml_str = NXToGML._convert_graph_to_gml(G, "left", changed_node_ids)
         expected_str = (
             '   left [\n      edge [ source 1 target 2 label "=" ]'
             + '\n      node [ id 1 label "C+" ]\n   ]\n'
@@ -46,9 +46,9 @@ class TestRuleWriting(unittest.TestCase):
 
     def test_rules_grammar(self):
         L, R, K = self.data["GraphRules"]
-        changed_node_ids = NXTOGML._find_changed_nodes(L, R, ["charge"])
+        changed_node_ids = NXToGML._find_changed_nodes(L, R, ["charge"])
         rule_name = "test_rule"
-        gml_str = NXTOGML._rule_grammar(L, R, K, rule_name, changed_node_ids)
+        gml_str = NXToGML._rule_grammar(L, R, K, rule_name, changed_node_ids)
         expected_str = (
             "rule [\n"
             '   ruleID "test_rule"\n'
@@ -70,11 +70,9 @@ class TestRuleWriting(unittest.TestCase):
         )
         self.assertEqual(gml_str, expected_str)
 
-    def test_process_graph_rules(self):
+    def test_transform(self):
         graph_rules = self.data["GraphRules"]
-        gml_str = NXTOGML.transform_graph_rules(
-            graph_rules, rule_name="test_rule", reindex=True
-        )
+        gml_str = NXToGML.transform(graph_rules, rule_name="test_rule", reindex=True)
         expected_str = (
             "rule [\n"
             '   ruleID "test_rule"\n'
