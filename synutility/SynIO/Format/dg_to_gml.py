@@ -93,7 +93,8 @@ class DGToGML:
 
     def fit(self, dg, origSmiles):
         """
-        Matches the original SMILES to a list of generated reaction SMILES and returns the parsed reaction.
+        Matches the original SMILES to a list of generated reaction SMILES and
+        returns the parsed reaction.
 
         Parameters:
         - dg (DataGenerator): The data generator instance containing the reactions.
@@ -106,11 +107,10 @@ class DGToGML:
             res = DGToGML.getReactionSmiles(dg)
             smiles_list = [value for values in res.values() for value in values]
 
-
-            smiles_standard = [self.standardizer.fit(rsmi, True, True) 
-                               for rsmi in smiles_list]
+            smiles_standard = [
+                self.standardizer.fit(rsmi, True, True) for rsmi in smiles_list
+            ]
             origSmiles_standard = self.standardizer.fit(origSmiles, True, True)
-
 
             for index, value in enumerate(smiles_standard):
                 if value == origSmiles_standard:
