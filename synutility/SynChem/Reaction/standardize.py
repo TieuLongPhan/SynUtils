@@ -124,4 +124,5 @@ class Standardize:
             rsmi = self.remove_atom_mapping(rsmi)
 
         rsmi = self.standardize_rsmi(rsmi, not ignore_stereo)
+        rsmi = rsmi.replace("[HH]", "[H][H]")
         return rsmi

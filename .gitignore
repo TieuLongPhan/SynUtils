@@ -3,14 +3,5 @@
 *.csv
 */catboost_info/*
 *.ipynb
-test.py
-rebalance_test.py
-split_comparison.py
-fp.py
-
 *.json
-split_benchmark_process.py
-synutility/SynChem/Reaction/misc.py
 test_mod.py
-reactionSmilesMake.py
-reactionSmilesParse.py
