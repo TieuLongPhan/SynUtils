@@ -7,8 +7,8 @@ logger = setup_logging()
 
 
 class GraphDescriptor:
-    def __init__(self, graph: nx.Graph):
-        self.graph = graph
+    def __init__(self) -> None:
+        pass
 
     @staticmethod
     def is_graph_empty(graph: Union[nx.Graph, dict, list, Any]) -> bool:
