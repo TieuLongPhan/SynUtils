@@ -13,7 +13,12 @@ class TestGraphSignature(unittest.TestCase):
 
     def test_create_topology_signature(self):
         signature = GraphSignature(self.rc)
-        self.assertEqual(signature.create_topology_signature(), "114")
+        self.assertEqual(
+            signature.create_topology_signature(
+                topo="Single Cyclic", cycle=[4], rstep=1
+            ),
+            "114",
+        )
 
     def test_create_node_signature(self):
         signature = GraphSignature(self.rc)
@@ -36,7 +41,10 @@ class TestGraphSignature(unittest.TestCase):
         edge_signature = "Br[-1]H/Br[1]C/C[-1]N/H[1]N"
         topo_signature = "114"
         expected = f"{topo_signature}.{node_signature}.{edge_signature}"
-        self.assertEqual(signature.create_graph_signature(), expected)
+        self.assertEqual(
+            signature.create_graph_signature(topo="Single Cyclic", cycle=[4], rstep=1),
+            expected,
+        )
 
 
 # Running the tests

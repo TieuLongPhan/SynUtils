@@ -1,5 +1,6 @@
 import random
 from typing import Dict, List
+from datetime import datetime
 
 
 def stratified_random_sample(
@@ -41,3 +42,29 @@ def stratified_random_sample(
             )
 
     return sampled_data
+
+
+def calculate_processing_time(start_time_str: str, end_time_str: str) -> float:
+    """
+    Calculates the processing time in seconds between two timestamps.
+
+    Parameters:
+    - start_time_str (str): A string representing the start time in the format
+    'YYYY-MM-DD HH:MM:SS,fff'.
+    - end_time_str (str): A string representing the end time in the same format as
+    start_time_str.
+
+    Returns:
+    - float: The duration between the start and end time in seconds.
+
+    Raises:
+    - ValueError: If the input strings do not match the expected format.
+    """
+    datetime_format = "%Y-%m-%d %H:%M:%S,%f"
+
+    start_time = datetime.strptime(start_time_str, datetime_format)
+    end_time = datetime.strptime(end_time_str, datetime_format)
+
+    duration = end_time - start_time
+
+    return duration.total_seconds()

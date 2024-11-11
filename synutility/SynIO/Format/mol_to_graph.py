@@ -3,6 +3,9 @@ from rdkit.Chem import AllChem
 import networkx as nx
 from typing import Dict
 import random
+from synutility.SynIO.debug import setup_logging
+
+logger = setup_logging()
 
 
 class MolToGraph:
@@ -23,7 +26,10 @@ class MolToGraph:
         Parameters:
         - mol (Chem.Mol): An RDKit molecule object.
         """
-        AllChem.ComputeGasteigerCharges(mol)
+        try:
+            AllChem.ComputeGasteigerCharges(mol)
+        except Exception as e:
+            logger.error(f"Error computing Gasteiger charges: {e}")
 
     @staticmethod
     def get_stereochemistry(atom: Chem.Atom) -> str:
@@ -118,7 +124,9 @@ class MolToGraph:
         Returns:
         - nx.Graph: A NetworkX graph representing the molecule.
         """
+
         cls.add_partial_charges(mol)
+
         graph = nx.Graph()
         index_to_class: Dict[int, int] = {}
         if cls.has_atom_mapping(mol) is False:
@@ -142,7 +150,7 @@ class MolToGraph:
                 partial_charge=gasteiger_charge,
                 hybridization=str(atom.GetHybridization()),
                 in_ring=atom.IsInRing(),
-                explicit_valence=atom.GetExplicitValence(),
+                # explicit_valence=atom.GetExplicitValence(),
                 implicit_hcount=atom.GetNumImplicitHs(),
                 neighbors=sorted(
                     [neighbor.GetSymbol() for neighbor in atom.GetNeighbors()]
