@@ -1,3 +1,4 @@
+import os
 import json
 import pickle
 import numpy as np
@@ -232,6 +233,8 @@ def load_from_pickle_generator(file_path: str) -> Generator[Any, None, None]:
                     yield item
             except EOFError:
                 break
+
+
 def collect_data(num_batches: int, temp_dir: str, file_template: str) -> List[Any]:
     """
     Collects and aggregates data from multiple pickle files into a single list.
