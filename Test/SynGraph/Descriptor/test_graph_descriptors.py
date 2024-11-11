@@ -1,5 +1,6 @@
 import unittest
 import networkx as nx
+from synutility.SynIO.data_type import load_from_pickle
 from synutility.SynGraph.Descriptor.graph_descriptors import GraphDescriptor
 
 
@@ -84,7 +85,9 @@ class TestGraphDescriptor(unittest.TestCase):
         self.graph.add_edge(35, 29, order=(0, 1.0), standard_order=-1.0)
         self.graph.add_edge(28, 29, order=(1.0, 0), standard_order=1.0)
         # Prepare the data dictionary
-        self.data = [{"RC": self.graph}]
+        self.data = {"RC": self.graph, "ITS": self.graph}
+
+        self.data_parallel = load_from_pickle("Data/test.pkl.gz")
 
     def test_is_acyclic_graph(self):
         self.assertTrue(GraphDescriptor.is_acyclic_graph(self.acyclic_graph))
@@ -149,27 +152,43 @@ class TestGraphDescriptor(unittest.TestCase):
 
     def test_get_descriptors(self):
         # Expected output after processing
-        expected_output = [
-            {
-                "RC": self.graph,
-                "topo": "Single Cyclic",  # Adjust based on expected graph type analysis
-                "cycle": [
-                    4
-                ],  # Expected cycle results, to be filled after actual function implementation
-                "atom_count": {"N": 1, "H": 1, "C": 1, "Br": 1},
-                "rtype": "Elementary",  # Expected reaction type
-                "rstep": 1,  # This should be based on the actual cycles count
-            }
-        ]
+        expected_output = {
+            "RC": self.graph,
+            "topo": "Single Cyclic",  # Adjust based on expected graph type analysis
+            "cycle": [
+                4
+            ],  # Expected cycle results, to be filled after actual function implementation
+            "atom_count": {"N": 1, "H": 1, "C": 1, "Br": 1},
+            "rtype": "Elementary",  # Expected reaction type
+            "rstep": 1,  # This should be based on the actual cycles count
+        }
 
         # Run the descriptor function
-        GraphDescriptor.get_descriptors(self.data, "RC")
+        results = GraphDescriptor.get_descriptors(self.data, "RC")
+        self.assertEqual(results["topo"], expected_output["topo"])
+        self.assertEqual(results["cycle"], expected_output["cycle"])
+        self.assertEqual(results["rstep"], expected_output["rstep"])
+        self.assertEqual(results["atom_count"], expected_output["atom_count"])
 
-        # Validate that the data has been enhanced correctly
-        for obtained, expected in zip(self.data, expected_output):
-            print("Hi", obtained)
-            print("hiii", expected)
-            self.assertDictEqual(obtained, expected)
+    def test_get_descriptors_parallel(self):
+        # Expected output after processing
+        expected_output = {
+            "RC": self.graph,
+            "topo": "Single Cyclic",
+            "cycle": [4],
+            "atom_count": {"N": 1, "H": 1, "C": 1, "Br": 1},
+            "rtype": "Elementary",
+            "rstep": 1,
+        }
+
+        # Run the descriptor function
+        results = GraphDescriptor.process_entries_in_parallel(
+            self.data_parallel, "GraphRules", "ITSGraph", n_jobs=4
+        )
+        self.assertEqual(results[0]["topo"], expected_output["topo"])
+        self.assertEqual(results[0]["cycle"], expected_output["cycle"])
+        self.assertEqual(results[0]["rstep"], expected_output["rstep"])
+        self.assertEqual(results[0]["atom_count"], expected_output["atom_count"])
 
 
 if __name__ == "__main__":

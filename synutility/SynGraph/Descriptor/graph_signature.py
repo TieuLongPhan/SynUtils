@@ -1,6 +1,5 @@
 import networkx as nx
 from collections import Counter
-from synutility.SynGraph.Descriptor.graph_descriptors import GraphDescriptor
 
 
 class GraphSignature:
@@ -33,7 +32,7 @@ class GraphSignature:
         - str: A concatenated string of sorted node elements, optionally with counts.
         """
         # Sort elements
-        elements = sorted(data["element"] for node, data in self.graph.nodes(data=True))
+        elements = sorted(data["element"] for _, data in self.graph.nodes(data=True))
 
         if condensed:
             # Count occurrences and format with counts
@@ -69,7 +68,7 @@ class GraphSignature:
             edge_signature_parts.append(part)
         return "/".join(sorted(edge_signature_parts))
 
-    def create_topology_signature(self) -> str:
+    def create_topology_signature(self, topo, cycle, rstep) -> str:
         """
         Generates a topology signature for the graph based on its cyclic properties and structure.
         The topology is classified and quantified by identifying cycles and other structural features.
@@ -77,9 +76,6 @@ class GraphSignature:
         Returns:
         - str: A string representing the numerical and qualitative topology signature of the graph.
         """
-        des = GraphDescriptor()
-        topo = des.check_graph_type(self.graph)
-        cycle = des.get_cycle_member_rings(self.graph)
 
         topo_mapping = {
             "Acyclic": 0,
@@ -89,11 +85,6 @@ class GraphSignature:
         }
 
         topo_code = topo_mapping.get(topo, 4)
-
-        if topo_code == 0:
-            cycle = [0]  # Represent acyclic graph with no cycles
-        elif topo_code == 3:
-            cycle = [0] + cycle  # Add complexity prefix for complex cyclic graphs
 
         rstep = len(cycle)
         cycle_str = "".join(map(str, cycle))
@@ -105,6 +96,9 @@ class GraphSignature:
         topology: bool = True,
         nodes: bool = True,
         edges: bool = True,
+        topo: str = None,
+        cycle: list = None,
+        rstep: int = None,
     ) -> str:
         """
         Combines node, edge, and topology signatures into a single comprehensive graph signature.
@@ -114,7 +108,7 @@ class GraphSignature:
           'topology_signature.node_signature.edge_signature'.
         """
         if topology:
-            topo_signature = self.create_topology_signature()
+            topo_signature = self.create_topology_signature(topo, cycle, rstep)
         else:
             topo_signature = ""
         if nodes:
