@@ -1,3 +1,9 @@
+"""
+This module comprises several functions adapted from the work of Klaus Weinbauer.
+The original code can be found at his GitHub repository: https://github.com/klausweinbauer/FGUtils.
+Adaptations were made to enhance functionality and integrate with other system components.
+"""
+
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from typing import List, Callable, Union, Tuple, Optional
