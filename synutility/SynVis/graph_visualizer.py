@@ -47,13 +47,13 @@ class GraphVisualizer:
         node_color: str = "#FFFFFF",
         node_size: int = 500,
         edge_color: str = "#000000",
-        edge_weight: float = 2.0,  
+        edge_weight: float = 2.0,
         show_atom_map: bool = False,
         use_edge_color: bool = False,  #
         symbol_key: str = "element",
         bond_key: str = "order",
         aam_key: str = "atom_map",
-        standard_order_key: str = "standard_order", 
+        standard_order_key: str = "standard_order",
         font_size: int = 12,
     ):
         """

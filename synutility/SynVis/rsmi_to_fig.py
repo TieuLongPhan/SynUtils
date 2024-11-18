@@ -55,7 +55,12 @@ def three_graph_vis(
 
         # Plot the graphs
         vis_graph.plot_as_mol(
-            r, ax[0], show_atom_map=show_atom_map, font_size=12, node_size=800, edge_width=2.0
+            r,
+            ax[0],
+            show_atom_map=show_atom_map,
+            font_size=12,
+            node_size=800,
+            edge_width=2.0,
         )
         if show_titles:
             ax[0].set_title("Reactants")
@@ -65,7 +70,12 @@ def three_graph_vis(
             ax[1].set_title("Imaginary Transition State")
 
         vis_graph.plot_as_mol(
-            p, ax[2], show_atom_map=show_atom_map, font_size=12, node_size=800, edge_width=2.0
+            p,
+            ax[2],
+            show_atom_map=show_atom_map,
+            font_size=12,
+            node_size=800,
+            edge_width=2.0,
         )
         if show_titles:
             ax[2].set_title("Products")
