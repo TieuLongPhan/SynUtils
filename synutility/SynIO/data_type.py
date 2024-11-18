@@ -102,6 +102,27 @@ def load_gml_as_text(gml_file_path):
         return None
 
 
+def save_text_as_gml(gml_text, file_path):
+    """
+    Save a GML text string to a file.
+
+    Parameters:
+    - gml_text (str): The GML content as a text string.
+    - file_path (str): The file path where the GML text will be saved.
+
+    Returns:
+    - bool: True if saving was successful, False otherwise.
+    """
+    try:
+        with open(file_path, "w") as file:
+            file.write(gml_text)
+        print(f"GML text successfully saved to {file_path}")
+        return True
+    except Exception as e:
+        print(f"An error occurred while saving the GML text: {e}")
+        return False
+
+
 def save_compressed(array: ndarray, filename: str) -> None:
     """
     Saves a NumPy array in a compressed format using .npz extension.

@@ -1,11 +1,9 @@
 import os
-import pytest
 import unittest
 import tempfile
 from synutility.SynGraph.Transform.core_engine import CoreEngine
 
 
-@pytest.mark.skip(reason="Temporarily disabled for demonstration purposes")
 class TestCoreEngine(unittest.TestCase):
     def setUp(self):
         # Create a temporary directory

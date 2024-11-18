@@ -51,5 +51,5 @@ jobs:
     - name: Test with pytest
       run: |
         conda activate synutils-env
-        pytest Test 
+        ./pytest.sh 
       shell: bash -l {0}
