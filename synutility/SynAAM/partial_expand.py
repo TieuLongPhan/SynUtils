@@ -78,4 +78,5 @@ class PartialExpand:
 
 if __name__ == "__main__":
     rsmi = "[CH3][CH:1]=[CH2:2].[H:3][H:4]>>[CH3][CH:1]([H:3])[CH2:2][H:4]"
+    rsmi = "CC[CH2:3][Cl:1].[NH2:2][H:4]>>CC[CH2:3][NH2:2].[Cl:1][H:4]"
     print(PartialExpand.expand(rsmi))

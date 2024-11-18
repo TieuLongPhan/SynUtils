@@ -18,6 +18,15 @@ class TestPartialExpand(unittest.TestCase):
         # Assert the result matches the expected output
         self.assertEqual(output_rsmi, expected_rsmi)
 
+    def test_expand_2(self):
+        input_rsmi = "CC[CH2:3][Cl:1].[NH2:2][H:4]>>CC[CH2:3][NH2:2].[Cl:1][H:4]"
+        output_rsmi = PartialExpand.expand(input_rsmi)
+        expected_rsmi = (
+            "[CH3:1][CH2:2][CH2:3][Cl:4].[NH2:5][H:6]"
+            + ">>[CH3:1][CH2:2][CH2:3][NH2:5].[Cl:4][H:6]"
+        )
+        self.assertEqual(output_rsmi, expected_rsmi)
+
 
 if __name__ == "__main__":
     unittest.main()
