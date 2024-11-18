@@ -1,7 +1,7 @@
 from rdkit import Chem
 from rdkit.Chem import AllChem
 import networkx as nx
-from typing import Dict
+from typing import Any, Dict, Optional
 import random
 from synutility.SynIO.debug import setup_logging
 
@@ -11,11 +11,15 @@ logger = setup_logging()
 class MolToGraph:
     """
     A class for converting molecules from SMILES strings to graph representations using
-    RDKit and NetworkX.
+    RDKit and NetworkX. It supports creating both lightweight and detailed
+    graph representations with customizable atom and bond attributes,
+    allowing for exclusion of atoms without atom mapping numbers.
     """
 
-    def __init__(self):
-        """Initialize the MolToGraphConverter class."""
+    def __init__(self) -> None:
+        """
+        Initialize the MolToGraph class.
+        """
         pass
 
     @staticmethod
@@ -43,11 +47,11 @@ class MolToGraph:
         - str: The stereochemistry ('R', 'S', or 'N' for non-chiral).
         """
         chiral_tag = atom.GetChiralTag()
-        if chiral_tag == Chem.ChiralType.CHI_TETRAHEDRAL_CCW:
-            return "S"
-        elif chiral_tag == Chem.ChiralType.CHI_TETRAHEDRAL_CW:
-            return "R"
-        return "N"
+        return (
+            "S"
+            if chiral_tag == Chem.ChiralType.CHI_TETRAHEDRAL_CCW
+            else "R" if chiral_tag == Chem.ChiralType.CHI_TETRAHEDRAL_CW else "N"
+        )
 
     @staticmethod
     def get_bond_stereochemistry(bond: Chem.Bond) -> str:
@@ -75,27 +79,18 @@ class MolToGraph:
         """
         Check if the given molecule has any atom mapping numbers.
 
-        Atom mapping numbers are used in chemical reactions to track the correspondence
-        between atoms in reactants and products.
-
         Parameters:
         - mol (Chem.Mol): An RDKit molecule object.
 
         Returns:
         - bool: True if any atom in the molecule has a mapping number, False otherwise.
         """
-        for atom in mol.GetAtoms():
-            if atom.HasProp("molAtomMapNumber"):
-                return True
-        return False
+        return any(atom.HasProp("molAtomMapNumber") for atom in mol.GetAtoms())
 
     @staticmethod
     def random_atom_mapping(mol: Chem.Mol) -> Chem.Mol:
         """
         Assigns a random atom mapping number to each atom in the given molecule.
-
-        This method iterates over all atoms in the molecule and assigns a random
-        mapping number between 1 and the total number of atoms to each atom.
 
         Parameters:
         - mol (Chem.Mol): An RDKit molecule object.
@@ -110,66 +105,114 @@ class MolToGraph:
         return mol
 
     @classmethod
-    def mol_to_graph(cls, mol: Chem.Mol, drop_non_aam: bool = False) -> nx.Graph:
+    def mol_to_graph(
+        cls,
+        mol: Chem.Mol,
+        drop_non_aam: Optional[bool] = False,
+        light_weight: Optional[bool] = False,
+    ) -> nx.Graph:
         """
         Converts an RDKit molecule object to a NetworkX graph with specified atom and bond
-        attributes.
-        Optionally excludes atoms without atom mapping numbers if drop_non_aam is True.
+        attributes. Optionally excludes atoms without atom mapping numbers
+        if drop_non_aam is True.
 
         Parameters:
         - mol (Chem.Mol): An RDKit molecule object.
         - drop_non_aam (bool, optional): If True, nodes without atom mapping numbers will
-        be dropped.
+          be dropped.
+        - light_weight (bool, optional): If True, creates a graph with minimal attributes.
 
         Returns:
         - nx.Graph: A NetworkX graph representing the molecule.
         """
+        if light_weight:
+            return cls._create_light_weight_graph(mol, drop_non_aam)
+        else:
+            return cls._create_detailed_graph(mol, drop_non_aam)
 
-        cls.add_partial_charges(mol)
-
+    @classmethod
+    def _create_light_weight_graph(cls, mol: Chem.Mol, drop_non_aam: bool) -> nx.Graph:
         graph = nx.Graph()
-        index_to_class: Dict[int, int] = {}
-        if cls.has_atom_mapping(mol) is False:
+        for atom in mol.GetAtoms():
+            atom_map = atom.GetAtomMapNum()
+            if drop_non_aam and atom_map == 0:
+                continue
+            graph.add_node(
+                atom_map,
+                element=atom.GetSymbol(),
+                aromatic=atom.GetIsAromatic(),
+                hcount=atom.GetTotalNumHs(),
+                charge=atom.GetFormalCharge(),
+                neighbors=[neighbor.GetSymbol() for neighbor in atom.GetNeighbors()],
+                atom_map=atom_map,
+            )
+            for bond in atom.GetBonds():
+                neighbor = bond.GetOtherAtom(atom)
+                neighbor_map = neighbor.GetAtomMapNum()
+                if not drop_non_aam or neighbor_map != 0:
+                    graph.add_edge(
+                        atom_map, neighbor_map, order=bond.GetBondTypeAsDouble()
+                    )
+        return graph
+
+    @classmethod
+    def _create_detailed_graph(cls, mol: Chem.Mol, drop_non_aam: bool) -> nx.Graph:
+        cls.add_partial_charges(mol)  # Compute charges if not already present
+        graph = nx.Graph()
+        index_to_class = {}
+        if not cls.has_atom_mapping(mol):
             mol = cls.random_atom_mapping(mol)
 
         for atom in mol.GetAtoms():
             atom_map = atom.GetAtomMapNum()
-
             if drop_non_aam and atom_map == 0:
                 continue
-            gasteiger_charge = round(float(atom.GetProp("_GasteigerCharge")), 3)
+            props = cls._gather_atom_properties(atom)
             index_to_class[atom.GetIdx()] = atom_map
-            graph.add_node(
-                atom_map,
-                charge=atom.GetFormalCharge(),
-                hcount=atom.GetTotalNumHs(),
-                aromatic=atom.GetIsAromatic(),
-                element=atom.GetSymbol(),
-                atom_map=atom_map,
-                isomer=cls.get_stereochemistry(atom),
-                partial_charge=gasteiger_charge,
-                hybridization=str(atom.GetHybridization()),
-                in_ring=atom.IsInRing(),
-                # explicit_valence=atom.GetExplicitValence(),
-                implicit_hcount=atom.GetNumImplicitHs(),
-                neighbors=sorted(
-                    [neighbor.GetSymbol() for neighbor in atom.GetNeighbors()]
-                ),
-            )
+            graph.add_node(atom_map, **props)
 
         for bond in mol.GetBonds():
-            begin_atom_class = index_to_class.get(bond.GetBeginAtomIdx())
-            end_atom_class = index_to_class.get(bond.GetEndAtomIdx())
-            if begin_atom_class is None or end_atom_class is None:
-                continue
-            graph.add_edge(
-                begin_atom_class,
-                end_atom_class,
-                order=bond.GetBondTypeAsDouble(),
-                ez_isomer=cls.get_bond_stereochemistry(bond),
-                bond_type=str(bond.GetBondType()),
-                conjugated=bond.GetIsConjugated(),
-                in_ring=bond.IsInRing(),
-            )
+            begin_atom_map = index_to_class.get(bond.GetBeginAtomIdx())
+            end_atom_map = index_to_class.get(bond.GetEndAtomIdx())
+            if begin_atom_map and end_atom_map:
+                graph.add_edge(
+                    begin_atom_map, end_atom_map, **cls._gather_bond_properties(bond)
+                )
 
         return graph
+
+    @staticmethod
+    def _gather_atom_properties(atom: Chem.Atom) -> Dict[str, Any]:
+        """Collect all relevant properties from an atom to use
+        as graph node attributes."""
+        gasteiger_charge = (
+            round(float(atom.GetProp("_GasteigerCharge")), 3)
+            if atom.HasProp("_GasteigerCharge")
+            else 0.0
+        )
+        return {
+            "charge": atom.GetFormalCharge(),
+            "hcount": atom.GetTotalNumHs(),
+            "aromatic": atom.GetIsAromatic(),
+            "element": atom.GetSymbol(),
+            "atom_map": atom.GetAtomMapNum(),
+            "isomer": MolToGraph.get_stereochemistry(atom),
+            "partial_charge": gasteiger_charge,
+            "hybridization": str(atom.GetHybridization()),
+            "in_ring": atom.IsInRing(),
+            "implicit_hcount": atom.GetNumImplicitHs(),
+            "neighbors": sorted(
+                neighbor.GetSymbol() for neighbor in atom.GetNeighbors()
+            ),
+        }
+
+    @staticmethod
+    def _gather_bond_properties(bond: Chem.Bond) -> Dict[str, Any]:
+        """Collect all relevant properties from a bond to use as graph edge attributes."""
+        return {
+            "order": bond.GetBondTypeAsDouble(),
+            "ez_isomer": MolToGraph.get_bond_stereochemistry(bond),
+            "bond_type": str(bond.GetBondType()),
+            "conjugated": bond.GetIsConjugated(),
+            "in_ring": bond.IsInRing(),
+        }

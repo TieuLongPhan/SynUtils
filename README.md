@@ -102,6 +102,7 @@ git pull
 
 ## Contributing
 - [Tieu-Long Phan](https://tieulongphan.github.io/)
+- [Klaus Weinbauer](https://github.com/klausweinbauer)
 - [Phuoc-Chung Nguyen Van](https://github.com/phuocchung123)
 
 ## Deployment timeline
