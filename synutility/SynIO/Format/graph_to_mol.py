@@ -12,7 +12,13 @@ class GraphToMol:
     """
 
     def __init__(
-        self, node_attributes: Dict[str, str], edge_attributes: Dict[str, str]
+        self,
+        node_attributes: Dict[str, str] = {
+            "element": "element",
+            "charge": "charge",
+            "atom_map": "atom_map",
+        },
+        edge_attributes: Dict[str, str] = {"order": "order"},
     ):
         """
         Initializes the GraphToMol converter with mappings for node and edge attributes
@@ -22,7 +28,7 @@ class GraphToMol:
         self.edge_attributes = edge_attributes
 
     def graph_to_mol(
-        self, graph: nx.Graph, ignore_bond_order: bool = False
+        self, graph: nx.Graph, ignore_bond_order: bool = False, sanitize: bool = True
     ) -> Chem.Mol:
         """
         Converts a NetworkX graph into an RDKit molecule object by interpreting node and
@@ -52,8 +58,8 @@ class GraphToMol:
             charge = data.get(self.node_attributes["charge"], 0)
             atom = Chem.Atom(element)
             atom.SetFormalCharge(charge)
-            if "atom_class" in data:  # Set atom map number if available
-                atom.SetAtomMapNum(data["atom_class"])
+            if "atom_map" in data:  # Set atom map number if available
+                atom.SetAtomMapNum(data["atom_map"])
             idx = mol.AddAtom(atom)
             node_to_idx[node] = idx
 
@@ -69,7 +75,8 @@ class GraphToMol:
             mol.AddBond(node_to_idx[u], node_to_idx[v], bond_type)
 
         # Attempt to sanitize the molecule to ensure its chemical validity
-        Chem.SanitizeMol(mol)
+        if sanitize:
+            Chem.SanitizeMol(mol)
 
         return mol
 
