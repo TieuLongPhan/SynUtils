@@ -7,7 +7,7 @@ name: Test & Lint
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "dev", "maintain" ]
   pull_request:
     branches: [ "main" ]
 
@@ -34,6 +34,7 @@ jobs:
       run: |
         conda create --name synutils-env python=3.11 -y
         conda activate synutils-env
+        conda install -c jakobandersen -c conda-forge mod
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       shell: bash -l {0}

@@ -1,5 +1,5 @@
 from rdkit import Chem
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 
 class Standardize:
@@ -126,3 +126,32 @@ class Standardize:
         rsmi = self.standardize_rsmi(rsmi, not ignore_stereo)
         rsmi = rsmi.replace("[HH]", "[H][H]")
         return rsmi
+
+    @staticmethod
+    def categorize_reactions(
+        reactions: List[str], target_reaction: str
+    ) -> Tuple[List[str], List[str]]:
+        """
+        Sorts a list of reaction SMILES strings into two groups based on
+        their match with a specified target reaction. The categorization process
+        distinguishes between reactions that align with the target reaction
+        and those that do not.
+
+        Parameters:
+        - reactions (List[str]): The array of reaction SMILES strings to be categorized.
+        - target_reaction (str): The SMILES string of the target reaction
+                                    used as the benchmark for categorization.
+
+        Returns:
+        - Tuple[List[str], List[str]]: A pair of lists, where the first contains
+                                    reactions matching the target and the second
+                                    comprises non-matching reactions.
+        """
+        match, not_match = [], []
+        target_reaction = Standardize.standardize_rsmi(target_reaction, stereo=False)
+        for reaction_smiles in reactions:
+            if reaction_smiles == target_reaction:
+                match.append(reaction_smiles)
+            else:
+                not_match.append(reaction_smiles)
+        return match, not_match
