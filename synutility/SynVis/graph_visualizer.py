@@ -4,12 +4,14 @@ The original code can be found at his GitHub repository: https://github.com/klau
 Adaptations were made to enhance functionality and integrate with other system components.
 """
 
+import networkx as nx
 from rdkit import Chem
 from rdkit.Chem import rdDepictor
-from typing import Dict, Optional
-import networkx as nx
-from synutility.SynIO.Format.graph_to_mol import GraphToMol
+
 import matplotlib.pyplot as plt
+from typing import Dict, Optional
+
+from synutility.SynIO.Format.graph_to_mol import GraphToMol
 
 
 class GraphVisualizer:
@@ -42,7 +44,7 @@ class GraphVisualizer:
             _its[u][v]["order"] = 1
         return GraphToMol(self.node_attributes, self.edge_attributes).graph_to_mol(
             _its, False, False
-        )  # Ensure this function is defined correctly elsewhere
+        )
 
     def plot_its(
         self,
@@ -85,7 +87,7 @@ class GraphVisualizer:
         Returns:
         - None
         """
-        bond_char = {None: "∅", 0: "∅", 1: "—", 2: "=", 3: "≡"}
+        bond_char = {None: "∅", 0: "∅", 1: "—", 2: "=", 3: "≡", 1.5: ":"}
 
         positions = self._calculate_positions(its, use_mol_coords)
 
@@ -98,9 +100,9 @@ class GraphVisualizer:
         if use_edge_color:
             edge_colors = [
                 (
-                    "green"
+                    "red"
                     if data.get(standard_order_key, 0) > 0
-                    else "red" if data.get(standard_order_key, 0) < 0 else "black"
+                    else "green" if data.get(standard_order_key, 0) < 0 else "black"
                 )
                 for _, _, data in its.edges(data=True)
             ]
@@ -198,7 +200,7 @@ class GraphVisualizer:
 
         # Set default bond characters if not provided
         if bond_char is None:
-            bond_char = {None: "∅", 1: "—", 2: "=", 3: "≡"}
+            bond_char = {None: "∅", 1: "—", 2: "=", 3: "≡", 1.5: ":"}
 
         # Determine positions based on use_mol_coords flag
         if use_mol_coords:
@@ -229,7 +231,14 @@ class GraphVisualizer:
         # Preparing labels
         labels = {}
         for n, d in g.nodes(data=True):
-            label = f"{d.get(symbol_key, '')}"
+            charge = d.get("charge", 0)
+            if charge == 0:
+                charge = ""
+            elif charge > 0:
+                charge = f"{charge}+" if charge > 1 else "+"
+            else:
+                charge = f"{-charge}-" if charge < -1 else "-"
+            label = f"{d.get(symbol_key, '')}{charge}"
             if show_atom_map:
                 label += f" ({d.get(aam_key, '')})"
             labels[n] = label

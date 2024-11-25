@@ -4,9 +4,14 @@ from typing import Optional, Tuple
 
 from synutility.SynIO.debug import setup_logging
 from synutility.SynIO.Format.mol_to_graph import MolToGraph
+from synutility.SynIO.Format.graph_to_mol import GraphToMol
+from synutility.SynAAM.its_construction import ITSConstruction
+from synutility.SynIO.Format.nx_to_gml import NXToGML
+from synutility.SynIO.Format.gml_to_nx import GMLToNX
+from synutility.SynAAM.misc import get_rc, its_decompose
 
 
-logger = setup_logging
+logger = setup_logging()
 
 
 def smiles_to_graph(
@@ -22,7 +27,8 @@ def smiles_to_graph(
     - sanitize (bool): Whether to sanitize the molecule during conversion.
 
     Returns:
-    - nx.Graph or None: The networkx graph representation of the molecule, or None if conversion fails.
+    - nx.Graph or None: The networkx graph representation of the molecule,
+    or None if conversion fails.
     """
     try:
         mol = Chem.MolFromSmiles(smiles, sanitize)
@@ -66,3 +72,59 @@ def rsmi_to_graph(
     except ValueError:
         logger.error(f"Invalid RSMI format: {rsmi}")
         return (None, None)
+
+
+def graph_to_rsmi(r: nx.Graph, p: nx.Graph) -> str:
+    """
+    Converts graph representations of reactants and products to a reaction SMILES string.
+
+    Parameters:
+    - r (nx.Graph): Graph of the reactants.
+    - p (nx.Graph): Graph of the products.
+
+    Returns:
+    - str: Reaction SMILES string.
+    """
+    r = GraphToMol().graph_to_mol(r)
+    p = GraphToMol().graph_to_mol(p)
+    return f"{Chem.MolToSmiles(r)}>>{Chem.MolToSmiles(p)}"
+
+
+def smart_to_gml(
+    smart: str,
+    core: bool = True,
+    sanitize: bool = False,
+    rule_name: str = "rule",
+    reindex: bool = False,
+) -> str:
+    """
+    Converts a SMARTS string to GML format, optionally focusing on the reaction core.
+
+    Parameters:
+    - smart (str): The SMARTS string representing the reaction.
+    - core (bool): Whether to extract and focus on the reaction core. Defaults to True.
+
+    Returns:
+    - str: The GML representation of the reaction.
+    """
+    r, p = rsmi_to_graph(smart, sanitize=sanitize)
+    its = ITSConstruction.ITSGraph(r, p)
+    if core:
+        its = get_rc(its)
+        r, p = its_decompose(its)
+    gml = NXToGML().transform((r, p, its), reindex=reindex, rule_name=rule_name)
+    return gml
+
+
+def gml_to_smart(gml: str) -> str:
+    """
+    Converts a GML string back to a SMARTS string by interpreting the graph structures.
+
+    Parameters:
+    - gml (str): The GML string to convert.
+
+    Returns:
+    - str: The corresponding SMARTS string.
+    """
+    r, p, rc = GMLToNX(gml).transform()
+    return graph_to_rsmi(r, p), rc

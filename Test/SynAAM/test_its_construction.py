@@ -1,6 +1,6 @@
 import unittest
 import networkx as nx
-from synutility.SynIO.Format.its_construction import ITSConstruction
+from synutility.SynAAM.its_construction import ITSConstruction
 
 
 class TestITSConstruction(unittest.TestCase):

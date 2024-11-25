@@ -4,8 +4,8 @@ from typing import Union, Tuple
 
 
 from synutility.SynVis.graph_visualizer import GraphVisualizer
-from synutility.SynIO.Format.smi_to_graph import rsmi_to_graph
-from synutility.SynIO.Format.its_construction import ITSConstruction
+from synutility.SynIO.Format.chemical_conversion import rsmi_to_graph
+from synutility.SynAAM.its_construction import ITSConstruction
 
 vis_graph = GraphVisualizer()
 

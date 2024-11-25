@@ -1,7 +1,7 @@
 import networkx as nx
 import re
 from typing import Tuple
-from synutility.SynIO.Format.its_construction import ITSConstruction
+from synutility.SynAAM.its_construction import ITSConstruction
 
 
 class GMLToNX:
@@ -90,7 +90,7 @@ class GMLToNX:
         is conservative and primarily for error handling.
         """
         # Regex to separate the element symbols from the optional charge and sign
-        match = re.match(r"([A-Za-z]+)(\d+)?([+-])?$", label)
+        match = re.match(r"([A-Za-z*]+)(\d+)?([+-])?$", label)
         if not match:
             return (
                 "X",

@@ -3,9 +3,9 @@ import networkx as nx
 from rdkit import Chem
 from typing import List
 
-from synutility.SynIO.Format.smi_to_graph import rsmi_to_graph
+from synutility.SynIO.Format.chemical_conversion import rsmi_to_graph
 from synutility.SynIO.Format.graph_to_mol import GraphToMol
-from synutility.SynIO.Format.its_construction import ITSConstruction
+from synutility.SynAAM.its_construction import ITSConstruction
 from synutility.SynAAM.misc import its_decompose, get_rc
 
 

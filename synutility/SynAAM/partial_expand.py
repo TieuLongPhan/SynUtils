@@ -1,6 +1,6 @@
 from synutility.SynIO.Format.nx_to_gml import NXToGML
-from synutility.SynIO.Format.smi_to_graph import rsmi_to_graph
-from synutility.SynIO.Format.its_construction import ITSConstruction
+from synutility.SynIO.Format.chemical_conversion import rsmi_to_graph
+from synutility.SynAAM.its_construction import ITSConstruction
 
 from synutility.SynAAM.misc import its_decompose, get_rc
 from synutility.SynAAM.normalize_aam import NormalizeAAM
