@@ -6,3 +6,5 @@
 *.json
 test_mod.py
 test_format.py
+*dev_zone
+test_format.py

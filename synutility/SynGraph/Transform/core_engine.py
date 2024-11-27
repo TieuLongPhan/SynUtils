@@ -1,7 +1,9 @@
-from typing import List
-from synutility.SynIO.data_type import load_gml_as_text
 from rdkit import Chem
-from copy import deepcopy
+from pathlib import Path
+from typing import List, Union
+from collections import Counter
+from synutility.SynIO.data_type import load_gml_as_text
+
 import torch
 from mod import *
 
@@ -49,7 +51,7 @@ class CoreEngine:
 
     @staticmethod
     def perform_reaction(
-        rule_file_path: str,
+        rule_file_path: Union[str, str],
         initial_smiles: List[str],
         prediction_type: str = "forward",
         print_results: bool = False,
@@ -94,7 +96,16 @@ class CoreEngine:
             initial_molecules, key=lambda molecule: molecule.numVertices, reverse=False
         )
         # Load the reaction rule from the GML file
-        gml_content = load_gml_as_text(rule_file_path)
+        rule_path = Path(rule_file_path)
+
+        try:
+            if rule_path.is_file():
+                gml_content = load_gml_as_text(rule_file_path)
+            else:
+                gml_content = rule_file_path
+        except Exception as e:
+            # print(f"An error occurred while loading the GML file: {e}")
+            gml_content = rule_file_path
         reaction_rule = ruleGMLString(gml_content, invert=invert_rule, add=False)
         # Initialize the derivation graph and execute the strategy
         dg = DG(graphDatabase=initial_molecules)
@@ -107,8 +118,10 @@ class CoreEngine:
         for e in dg.edges:
             productSmiles = [v.graph.smiles for v in e.targets]
             temp_results.append(productSmiles)
+            # print(productSmiles)
 
         if len(temp_results) == 0:
+            # print(1)
             dg = DG(graphDatabase=initial_molecules)
             # dg.build().execute(strategy, verbosity=8)
             config.dg.doRuleIsomorphismDuringBinding = False
@@ -118,27 +131,22 @@ class CoreEngine:
             temp_results, small_educt = [], []
             for edge in dg.edges:
                 temp_results.append([vertex.graph.smiles for vertex in edge.targets])
-                small_educt.extend([vertex.graph.smiles for vertex in edge.sources])
+                small_educt.append([vertex.graph.smiles for vertex in edge.sources])
 
-            small_educt_set = [
-                Chem.CanonSmiles(smile) for smile in small_educt if smile is not None
-            ]
-
-            reagent = deepcopy(initial_smiles)
-            for value in small_educt_set:
-                if value in reagent:
-                    reagent.remove(value)
-
-            # Update solutions with reagents and normalize SMILES
-            for solution in temp_results:
+            for key, solution in enumerate(temp_results):
+                educt = small_educt[key]
+                small_educt_counts = Counter(
+                    Chem.CanonSmiles(smile) for smile in educt if smile is not None
+                )
+                reagent_counts = Counter([Chem.CanonSmiles(s) for s in initial_smiles])
+                reagent_counts.subtract(small_educt_counts)
+                reagent = [
+                    smile
+                    for smile, count in reagent_counts.items()
+                    for _ in range(count)
+                    if count > 0
+                ]
                 solution.extend(reagent)
-                for i, smile in enumerate(solution):
-                    try:
-                        mol = Chem.MolFromSmiles(smile)
-                        if mol:  # Only convert if mol creation was successful
-                            solution[i] = Chem.MolToSmiles(mol)
-                    except Exception as e:
-                        print(f"Error processing SMILES {smile}: {str(e)}")
 
         reaction_processing_map = {
             "forward": lambda smiles: CoreEngine.generate_reaction_smiles(

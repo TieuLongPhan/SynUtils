@@ -143,7 +143,9 @@ class MolToGraph:
                 aromatic=atom.GetIsAromatic(),
                 hcount=atom.GetTotalNumHs(),
                 charge=atom.GetFormalCharge(),
-                neighbors=[neighbor.GetSymbol() for neighbor in atom.GetNeighbors()],
+                neighbors=sorted(
+                    neighbor.GetSymbol() for neighbor in atom.GetNeighbors()
+                ),
                 atom_map=atom_map,
             )
             for bond in atom.GetBonds():

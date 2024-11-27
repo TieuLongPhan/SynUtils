@@ -22,6 +22,7 @@ class DGToGML:
         res = {}
         for e in dg.edges:
             vms = DGVertexMapper(e, rightLimit=1, leftLimit=1)
+            # vms = DGVertexMapper(e)
             eductSmiles = [origSmiles[g] for g in vms.left]
 
             for ev in vms.left.vertices:
@@ -31,6 +32,7 @@ class DGToGML:
 
             strs = set()
             for vm in DGVertexMapper(e, rightLimit=1, leftLimit=1):
+                # for vm in DGVertexMapper(e):
                 productSmiles = [origSmiles[g] for g in vms.right]
                 for ev in vms.left.vertices:
                     pv = vm.map[ev]

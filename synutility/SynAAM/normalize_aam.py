@@ -3,9 +3,9 @@ import networkx as nx
 from rdkit import Chem
 from typing import List
 
-from synutility.SynIO.Format.smi_to_graph import rsmi_to_graph
+from synutility.SynIO.Format.chemical_conversion import rsmi_to_graph
 from synutility.SynIO.Format.graph_to_mol import GraphToMol
-from synutility.SynIO.Format.its_construction import ITSConstruction
+from synutility.SynAAM.its_construction import ITSConstruction
 from synutility.SynAAM.misc import its_decompose, get_rc
 
 
@@ -50,7 +50,7 @@ class NormalizeAAM:
         return pattern.sub(NormalizeAAM.increment, smiles)
 
     @staticmethod
-    def fix_rsmi(rsmi: str) -> str:
+    def fix_aam_rsmi(rsmi: str) -> str:
         """
         Adjusts atom mapping numbers in both reactant and product parts of a reaction SMILES (RSMI).
 
@@ -62,6 +62,54 @@ class NormalizeAAM:
         """
         r, p = rsmi.split(">>")
         return f"{NormalizeAAM.fix_atom_mapping(r)}>>{NormalizeAAM.fix_atom_mapping(p)}"
+
+    @staticmethod
+    def fix_rsmi_kekulize(rsmi: str) -> str:
+        """
+        Filters the reactants and products of a reaction SMILES string.
+
+        Parameters:
+        - rsmi (str): A string representing the reaction SMILES in the form of "reactants >> products".
+
+        Returns:
+        - str: A filtered reaction SMILES string where invalid reactants/products are removed.
+        """
+        # Split the reaction into reactants and products
+        reactants, products = rsmi.split(">>")
+
+        # Filter valid reactants and products
+        filtered_reactants = NormalizeAAM.fix_kekulize(reactants)
+        filtered_products = NormalizeAAM.fix_kekulize(products)
+
+        # Return the filtered reaction SMILES
+        return f"{filtered_reactants}>>{filtered_products}"
+
+    @staticmethod
+    def fix_kekulize(smiles: str) -> str:
+        """
+        Filters and returns valid SMILES strings from a string of SMILES, joined by '.'.
+
+        This function processes a string of SMILES separated by periods (e.g., "CCO.CC=O"),
+        filters out invalid SMILES, and returns a string of valid SMILES joined by periods.
+
+        Parameters:
+        - smiles (str): A string containing SMILES strings separated by periods ('.').
+
+        Returns:
+        - str: A string of valid SMILES, joined by periods ('.').
+        """
+        smiles_list = smiles.split(".")  # Split SMILES by period
+        valid_smiles = []  # List to store valid SMILES strings
+
+        for smile in smiles_list:
+            mol = Chem.MolFromSmiles(smile, sanitize=False)
+            if mol:  # Check if molecule is valid
+                valid_smiles.append(
+                    Chem.MolToSmiles(
+                        mol, canonical=True, kekuleSmiles=True, allHsExplicit=True
+                    )
+                )
+        return ".".join(valid_smiles)  # Return valid SMILES joined by '.'
 
     @staticmethod
     def extract_subgraph(graph: nx.Graph, indices: List[int]) -> nx.Graph:
@@ -114,8 +162,9 @@ class NormalizeAAM:
         Returns:
         str: The resulting reaction SMILES string with updated atom mappings.
         """
+        rsmi = self.fix_rsmi_kekulize(rsmi)
         if fix_aam_indice:
-            rsmi = self.fix_rsmi(rsmi)
+            rsmi = self.fix_aam_rsmi(rsmi)
         r_graph, p_graph = rsmi_to_graph(rsmi, light_weight=True, sanitize=False)
         its = ITSConstruction().ITSGraph(r_graph, p_graph)
         rc = get_rc(its)
