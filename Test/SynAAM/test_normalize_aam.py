@@ -21,7 +21,7 @@ class TestNormalizeAAM(unittest.TestCase):
         for both reactants and products."""
         input_rsmi = "[C:0]>>[C:1]"
         expected_rsmi = "[C:1]>>[C:2]"
-        self.assertEqual(self.normalizer.fix_rsmi(input_rsmi), expected_rsmi)
+        self.assertEqual(self.normalizer.fix_aam_rsmi(input_rsmi), expected_rsmi)
 
     def test_extract_subgraph(self):
         """Test extraction of a subgraph based on specified indices."""
