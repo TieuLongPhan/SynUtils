@@ -57,12 +57,13 @@ class GraphVisualizer:
         edge_color: str = "#000000",
         edge_weight: float = 2.0,
         show_atom_map: bool = False,
-        use_edge_color: bool = False,  #
+        use_edge_color: bool = False,
         symbol_key: str = "element",
         bond_key: str = "order",
         aam_key: str = "atom_map",
         standard_order_key: str = "standard_order",
         font_size: int = 12,
+        rule: bool = False,  # New option to remove edges with specific colors
     ):
         """
         Plot an intermediate transition state (ITS) graph on a given Matplotlib axes with various customizations.
@@ -76,13 +77,14 @@ class GraphVisualizer:
         - node_size (int): Size of the graph nodes.
         - edge_color (str): Default color code for the graph edges if not using conditional coloring.
         - edge_weight (float): Thickness of the graph edges.
-        - show_aam (bool): If True, displays atom mapping numbers alongside symbols.
+        - show_atom_map (bool): If True, displays atom mapping numbers alongside symbols.
         - use_edge_color (bool): If True, colors edges based on their 'standard_order' attribute.
         - symbol_key (str): Key to access the symbol attribute in the node's data.
         - bond_key (str): Key to access the bond type attribute in the edge's data.
         - aam_key (str): Key to access the atom mapping number in the node's data.
         - standard_order_key (str): Key to determine the edge color conditionally.
         - font_size (int): Font size for labels and edge labels.
+        - rule (bool): If True, removes edges with a specific color before plotting.
 
         Returns:
         - None
@@ -109,6 +111,30 @@ class GraphVisualizer:
         else:
             edge_colors = edge_color
 
+        # If rule=True, remove edges with specific colors (red/green/black)
+        if rule:
+            # Get the edges that have the colors red, green, or black
+            edges_to_remove = [
+                edge
+                for edge, color in zip(its.edges(), edge_colors)
+                if color in ["red", "green", "black"]
+            ]
+            its.remove_edges_from(edges_to_remove)
+
+            # Recalculate edge_colors after removal of edges
+            if use_edge_color:
+                edge_colors = [
+                    (
+                        "red"
+                        if data.get(standard_order_key, 0) > 0
+                        else "green" if data.get(standard_order_key, 0) < 0 else "black"
+                    )
+                    for _, _, data in its.edges(data=True)
+                ]
+            else:
+                edge_colors = edge_color
+
+        # Plot the remaining graph
         nx.draw_networkx_edges(
             its, positions, edge_color=edge_colors, width=edge_weight, ax=ax
         )

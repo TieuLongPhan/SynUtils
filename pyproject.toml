@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "synutility"
-version = "0.0.12"
+version = "0.0.13"
 authors = [
     {name="Tieu Long Phan", email="tieu@bioinf.uni-leipzig.de"}
 ]
@@ -22,6 +22,7 @@ dependencies = [
     "rdkit>=2024.3.3",
     "networkx>=3.3",
     "seaborn>=0.13.2",
+    "requests>=2.32.3",
 ]
 
 [project.optional-dependencies]

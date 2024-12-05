@@ -180,12 +180,7 @@ class GraphDescriptor:
         )
 
         GraphDescriptor._adjust_cycle_and_step(entry, "cycle", entry["topo"])
-        entry["signature_rc"] = GraphSignature(graph).create_graph_signature(
-            topo=entry["topo"],
-            cycle=entry["cycle"],
-            rstep=entry["rstep"],
-            condensed=condensed,
-        )
+        entry["signature_rc"] = GraphSignature(graph).create_graph_signature()
 
         # Initialize ITS descriptors and call adjust
         topo_its = GraphDescriptor.check_graph_type(its_graph)
@@ -195,12 +190,7 @@ class GraphDescriptor:
             entry, "cycle_its", topo_its, its_prefix="its"
         )
 
-        entry["signature_its"] = GraphSignature(its_graph).create_graph_signature(
-            topo=topo_its,
-            cycle=entry["cycle_its"],
-            rstep=entry["rstep_its"],
-            condensed=condensed,
-        )
+        entry["signature_its"] = GraphSignature(its_graph).create_graph_signature()
 
         return entry
 
