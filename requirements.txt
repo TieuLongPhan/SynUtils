@@ -8,4 +8,5 @@ rxn-utils==2.0.0
 rxnmapper==0.3.0
 rdkit >= 2024.3.3
 pandas>=2.2.0
-requests>=3.4.0
+requests>=2.32.3
+torch==2.0.1
