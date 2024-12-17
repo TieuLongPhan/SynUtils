@@ -1,6 +1,6 @@
 import networkx as nx
 from typing import Tuple, Dict, Any
-from copy import deepcopy
+from copy import deepcopy, copy
 
 
 class ITSConstruction:
@@ -136,7 +136,7 @@ class ITSConstruction:
         Returns:
         - nx.Graph: The updated graph with added edges.
         """
-        new_ITS = deepcopy(ITS)
+        new_ITS = ITS.copy()
 
         # Add edges from G and H
         for graph_from, graph_to, reverse in [(G, H, False), (H, G, True)]:

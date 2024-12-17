@@ -4,12 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "synutility"
-version = "0.0.13"
+version = "0.0.14"
 authors = [
     {name="Tieu Long Phan", email="tieu@bioinf.uni-leipzig.de"}
 ]
 description = "Utility for reaction modeling using graph grammar"
 readme = "README.md"
+long-description = {file = "CHANGELOG.md"}
+long-description-content-type = "text/markdown"
 requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",

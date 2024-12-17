@@ -115,18 +115,30 @@ class GraphDescriptor:
             return "Complex Cyclic"
 
     @staticmethod
-    def get_cycle_member_rings(G: nx.Graph) -> List[int]:
+    def get_cycle_member_rings(G: nx.Graph, type="minimal") -> List[int]:
         """
-        Finds all cycles in the graph and returns a list of their sizes.
+        Identifies all cycles in the given graph using cycle bases to ensure no overlap
+        and returns a list of the sizes of these cycles (member rings),
+        sorted in ascending order.
 
         Parameters:
-        - G (nx.Graph): The graph to analyze.
+        - G (nx.Graph): The NetworkX graph to be analyzed.
 
         Returns:
-        - List[int]: Sorted list of cycle sizes.
+        - List[int]: A sorted list of cycle sizes (member rings) found in the graph.
         """
-        GraphDescriptor._validate_graph_input(G)
-        return sorted(len(cycle) for cycle in nx.minimum_cycle_basis(G))
+        if not isinstance(G, nx.Graph):
+            raise TypeError("Input must be a networkx Graph object.")
+
+        if type == "minimal":
+            cycles = nx.minimum_cycle_basis(G)
+        else:
+            cycles = nx.cycle_basis(G)
+        member_rings = [len(cycle) for cycle in cycles]
+
+        member_rings.sort()
+
+        return member_rings
 
     @staticmethod
     def get_element_count(graph: nx.Graph) -> Dict[str, int]:
