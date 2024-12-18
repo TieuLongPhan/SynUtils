@@ -1,5 +1,5 @@
-import networkx as nx
 import re
+import networkx as nx
 from typing import Tuple
 from synutility.SynAAM.its_construction import ITSConstruction
 
@@ -19,13 +19,13 @@ class GMLToNX:
 
     def _parse_element(self, line: str, current_section: str):
         """
-        Private method to parse a line from the GML text, extracting nodes and edges
-        to populate the specified graph section.
+        Parses a line of GML-like text to extract node or edge data and adds it to the
+        current section's graph.
 
         Parameters:
-        - line (str): The line of text from the GML data.
-        - current_section (str): The key of the graph section
-        ('left', 'context', 'right') being populated.
+        - line (str): A line from the GML-like text representing either a node or an edge.
+        - current_section (str): The graph section (left, context, right) to which the
+        node or edge belongs.
         """
         label_to_order = {"-": 1, ":": 1.5, "=": 2, "#": 3}
         tokens = line.split()
@@ -46,86 +46,60 @@ class GMLToNX:
             order = label_to_order.get(label, 0)
             self.graphs[current_section].add_edge(source, target, order=float(order))
 
-    def _synchronize_nodes(self):
+    def _synchronize_nodes_and_edges(self):
         """
-        Private method to ensure that all nodes present in the 'context' graph are also
-        present in the 'left' and 'right' graphs.
+        Ensures that all nodes and edges present in the 'context' graph are also
+        present in the 'left' and 'right' graphs, maintaining consistency across graphs.
         """
         context_nodes = self.graphs["context"].nodes(data=True)
+        context_edges = self.graphs["context"].edges(data=True)
         for graph_key in ["left", "right"]:
             for node, data in context_nodes:
                 self.graphs[graph_key].add_node(node, **data)
+            for source, target, data in context_edges:
+                self.graphs[graph_key].add_edge(source, target, **data)
 
     def _extract_element_and_charge(self, label: str) -> Tuple[str, int]:
         """
-        Extracts the chemical element and its charge from a node label. This function is
-        designed to handle labels formatted in several ways, including just an element
-        symbol ("C"), an element with a charge and sign ("Na+"), or an element with a
-        multi-digit charge and a sign ("Mg2+"). The function uses regular expressions
-        to parse the label accurately and extract the needed information.
+        Extracts the chemical element and its charge from a node label using regex.
 
         Parameters:
-        - label (str): The label from which to extract information. Expected to be in
-        one of the following formats:
-        - "Element" (e.g., "C")
-        - "Element[charge][sign]" (e.g., "Na+", "Mg2+")
-        - "Element[charge][sign]" where charge is optional and if present, must be
-        followed by a sign (e.g., "Al3+", "K+"). The charge is not assumed if no sign
-        is present.
+        - label (str): The node label in formats like "Element", "Element+", "Element-",
+        "Element2+", etc.
 
         Returns:
-        - Tuple[str, int]: A tuple where the first element is the chemical element
-        symbol (str) extracted from the label, and the second element is an integer
-        representing the charge. The charge defaults to 0 if no charge information
-        is present in the label.
-
-        Raises:
-        - ValueError: If the label does not conform to the expected formats,
-        which should not happen if labels are pre-validated.
-
-        Note:
-        - The function assumes that the input label is well-formed according to the
-        described patterns. Labels without any recognizable pattern will default to
-        returning "X" as the element with a charge of 0, though this behavior
-        is conservative and primarily for error handling.
+        - Tuple[str, int]: A tuple containing the chemical element (str) and
+        its charge (int).
         """
-        # Regex to separate the element symbols from the optional charge and sign
         match = re.match(r"([A-Za-z*]+)(\d+)?([+-])?$", label)
         if not match:
-            return (
-                "X",
-                0,
-            )  # Default case if regex fails to match, unlikely but safe to handle
+            return ("X", 0)  # Safe fallback for unrecognized patterns
 
         element = match.group(1)
         charge_number = match.group(2)
         charge_sign = match.group(3)
 
         if charge_number and charge_sign:
-            # If there's a number and a sign, combine them to form the charge
             charge = int(charge_number) * (1 if charge_sign == "+" else -1)
         elif charge_sign:
-            # If there is no number but there's a sign, it means the charge is 1 or -1
             charge = 1 if charge_sign == "+" else -1
         else:
-            # If no charge information is provided, assume a charge of 0
             charge = 0
 
         return element, charge
 
     def transform(self) -> Tuple[nx.Graph, nx.Graph, nx.Graph]:
         """
-        Transforms the GML-like text into three distinct NetworkX graphs, each
-        representing different aspects of the reaction: 'left' for reactants,
-        'context' for ITS, and 'right' for products.
+        Transforms the GML-like text into three NetworkX graphs representing different
+        aspects of a chemical reaction: 'left' for reactants, 'context' for intermediates,
+        and 'right' for products.
 
         Returns:
-        - Tuple[nx.Graph, nx.Graph, nx.Graph]: A tuple containing the graphs for
-        reactants, products, and ITS.
+        - Tuple[nx.Graph, nx.Graph, nx.Graph]: A tuple containing the graphs for the
+        reactants, products, and its graph, respectively.
         """
         current_section = None
         lines = self.gml_text.split("\n")
-
         for line in lines:
             line = line.strip()
             if line.startswith("rule") or line == "]":
@@ -136,7 +110,8 @@ class GMLToNX:
             if line.startswith("node") or line.startswith("edge"):
                 self._parse_element(line, current_section)
 
-        self._synchronize_nodes()
+        self._synchronize_nodes_and_edges()
+
         self.graphs["context"] = ITSConstruction.ITSGraph(
             self.graphs["left"], self.graphs["right"]
         )

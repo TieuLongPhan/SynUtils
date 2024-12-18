@@ -1,6 +1,6 @@
 import networkx as nx
 from typing import Tuple, Dict, Any
-from copy import deepcopy, copy
+from copy import deepcopy
 
 
 class ITSConstruction:

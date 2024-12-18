@@ -30,15 +30,37 @@ def smiles_to_graph(
     - nx.Graph or None: The networkx graph representation of the molecule,
     or None if conversion fails.
     """
+
     try:
-        mol = Chem.MolFromSmiles(smiles, sanitize)
-        if mol:
-            return MolToGraph().mol_to_graph(mol, drop_non_aam, light_weight)
-        else:
+        # Parse SMILES to a molecule object, without sanitizing initially
+        mol = Chem.MolFromSmiles(smiles, sanitize=False)
+        if mol is None:
             logger.warning(f"Failed to parse SMILES: {smiles}")
+            return None
+
+        # Perform sanitization if requested
+        if sanitize:
+            try:
+                Chem.SanitizeMol(mol)
+            except Exception as sanitize_error:
+                logger.error(
+                    f"Sanitization failed for SMILES {smiles}: {sanitize_error}"
+                )
+                return None
+
+        # Convert molecule to graph
+        graph_converter = MolToGraph()
+        graph = graph_converter.mol_to_graph(mol, drop_non_aam, light_weight)
+        if graph is None:
+            logger.warning(f"Failed to convert molecule to graph for SMILES: {smiles}")
+        return graph
+
     except Exception as e:
-        logger.error(f"Error converting SMILES to graph: {smiles}, Error: {str(e)}")
-    return None
+        logger.error(
+            "Unhandled exception in converting SMILES to graph"
+            + f": {smiles}, Error: {str(e)}"
+        )
+        return None
 
 
 def rsmi_to_graph(
@@ -74,7 +96,13 @@ def rsmi_to_graph(
         return (None, None)
 
 
-def graph_to_rsmi(r: nx.Graph, p: nx.Graph) -> str:
+def graph_to_rsmi(
+    r: nx.Graph,
+    p: nx.Graph,
+    its: nx.Graph,
+    sanitize: bool = True,
+    explicit_hydrogen: bool = False,
+) -> str:
     """
     Converts graph representations of reactants and products to a reaction SMILES string.
 
@@ -85,8 +113,12 @@ def graph_to_rsmi(r: nx.Graph, p: nx.Graph) -> str:
     Returns:
     - str: Reaction SMILES string.
     """
-    r = GraphToMol().graph_to_mol(r)
-    p = GraphToMol().graph_to_mol(p)
+    if explicit_hydrogen is False:
+        rc = get_rc(its)
+        r, p = its_decompose(rc)
+    r = GraphToMol().graph_to_mol(r, sanitize=sanitize)
+    p = GraphToMol().graph_to_mol(p, sanitize=sanitize)
+
     return f"{Chem.MolToSmiles(r)}>>{Chem.MolToSmiles(p)}"
 
 
@@ -95,7 +127,8 @@ def smart_to_gml(
     core: bool = True,
     sanitize: bool = False,
     rule_name: str = "rule",
-    reindex: bool = False,
+    reindex: bool = True,
+    explicit_hydrogen: bool = False,
 ) -> str:
     """
     Converts a SMARTS string to GML format, optionally focusing on the reaction core.
@@ -112,11 +145,18 @@ def smart_to_gml(
     if core:
         its = get_rc(its)
         r, p = its_decompose(its)
-    gml = NXToGML().transform((r, p, its), reindex=reindex, rule_name=rule_name)
+    gml = NXToGML().transform(
+        (r, p, its),
+        reindex=reindex,
+        rule_name=rule_name,
+        explicit_hydrogen=explicit_hydrogen,
+    )
     return gml
 
 
-def gml_to_smart(gml: str) -> str:
+def gml_to_smart(
+    gml: str, sanitize: bool = True, explicit_hydrogen: bool = False
+) -> str:
     """
     Converts a GML string back to a SMARTS string by interpreting the graph structures.
 
@@ -127,4 +167,4 @@ def gml_to_smart(gml: str) -> str:
     - str: The corresponding SMARTS string.
     """
     r, p, rc = GMLToNX(gml).transform()
-    return graph_to_rsmi(r, p), rc
+    return graph_to_rsmi(r, p, rc, sanitize, explicit_hydrogen), rc

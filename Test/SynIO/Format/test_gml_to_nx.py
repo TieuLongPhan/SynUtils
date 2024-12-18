@@ -11,8 +11,10 @@ class TestGMLToNX(unittest.TestCase):
         data = load_from_pickle("Data/test.pkl.gz")[0]
         self.ground_truth_its = data["ITSGraph"]
         self.ground_truth_rc = data["GraphRules"]
-        self.rule_its = NXToGML.transform(self.ground_truth_its)
-        self.rule_rc = NXToGML.transform(self.ground_truth_rc)
+        self.rule_its = NXToGML.transform(
+            self.ground_truth_its, explicit_hydrogen=False
+        )
+        self.rule_rc = NXToGML.transform(self.ground_truth_rc, explicit_hydrogen=False)
         self.parser = GMLToNX(gml_text="")
         gml_formatted_str = (
             "rule [\n"
@@ -60,7 +62,7 @@ class TestGMLToNX(unittest.TestCase):
             "Edge attributes do not match expected values.",
         )
 
-    def test_synchronize_nodes(self):
+    def test_synchronize_nodes_and_edges(self):
         """
         Test the synchronization of nodes across different graph sections after parsing.
         """
@@ -72,7 +74,7 @@ class TestGMLToNX(unittest.TestCase):
             35, element="H", charge=0, atom_map=35
         )
         # Running synchronization
-        self.parser_gml._synchronize_nodes()
+        self.parser_gml._synchronize_nodes_and_edges()
         # Checking if nodes are present in left and right graphs
         self.assertIn(11, self.parser_gml.graphs["left"])
         self.assertIn(35, self.parser_gml.graphs["right"])

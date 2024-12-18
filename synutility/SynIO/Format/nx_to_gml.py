@@ -1,5 +1,6 @@
 import networkx as nx
 from typing import Tuple, Dict, List
+from synutility.SynAAM.misc import expand_hydrogens
 
 
 class NXToGML:
@@ -63,7 +64,10 @@ class NXToGML:
 
     @staticmethod
     def _convert_graph_to_gml(
-        graph: nx.Graph, section: str, changed_node_ids: List
+        graph: nx.Graph,
+        section: str,
+        changed_node_ids: List,
+        explicit_hydrogen: bool = False,
     ) -> str:
         """
         Convert a NetworkX graph to a GML string representation, focusing on nodes for the
@@ -74,6 +78,9 @@ class NXToGML:
         - section (str): The section name in the GML output, typically "left", "right", or
         "context".
         - changed_node_ids (List): list of nodes change attribute
+        - explicit_hydrogen (bool): Whether to explicitly include hydrogen atoms
+        in the output.
+
 
         Returns:
         str: The GML string representation of the graph for the specified section.
@@ -90,6 +97,16 @@ class NXToGML:
                     gml_str += (
                         f'      node [ id {node[0]} label "{element}{charge_str}" ]\n'
                     )
+            if explicit_hydrogen:
+                for edge in graph.edges(data=True):
+                    order = edge[2].get("order", (1.0, 1.0))
+                    standard_order = edge[2].get("standard_order", (0))
+                    if standard_order == 0:
+                        label = order_to_label.get(order, "-")
+                        gml_str += (
+                            f"      edge [ source {edge[0]} target {edge[1]}"
+                            + f' label "{label}" ]\n'
+                        )
 
         if section != "context":
             for edge in graph.edges(data=True):
@@ -109,7 +126,12 @@ class NXToGML:
 
     @staticmethod
     def _rule_grammar(
-        L: nx.Graph, R: nx.Graph, K: nx.Graph, rule_name: str, changed_node_ids: List
+        L: nx.Graph,
+        R: nx.Graph,
+        K: nx.Graph,
+        rule_name: str,
+        changed_node_ids: List,
+        explicit_hydrogen: bool,
     ) -> str:
         """
         Generate a GML string representation for a chemical rule, including its left,
@@ -120,6 +142,7 @@ class NXToGML:
         - R (nx.Graph): The right graph.
         - K (nx.Graph): The context graph.
         - rule_name (str): The name of the rule.
+        - explicit_hydrogen (bool): Whether to explicitly include hydrogen atoms in the output.
 
         Returns:
         - str: The GML string representation of the rule.
@@ -127,7 +150,9 @@ class NXToGML:
         gml_str = "rule [\n"
         gml_str += f'   ruleID "{rule_name}"\n'
         gml_str += NXToGML._convert_graph_to_gml(L, "left", changed_node_ids)
-        gml_str += NXToGML._convert_graph_to_gml(K, "context", changed_node_ids)
+        gml_str += NXToGML._convert_graph_to_gml(
+            K, "context", changed_node_ids, explicit_hydrogen
+        )
         gml_str += NXToGML._convert_graph_to_gml(R, "right", changed_node_ids)
         gml_str += "]"
         return gml_str
@@ -138,6 +163,7 @@ class NXToGML:
         rule_name: str = "Test",
         reindex: bool = False,
         attributes: List[str] = ["charge"],
+        explicit_hydrogen: bool = False,
     ) -> Dict[str, str]:
         """
         Process a dictionary of graph rules to generate GML strings for each rule, with an
@@ -147,12 +173,16 @@ class NXToGML:
         - graph_rules (Dict[str, Tuple[nx.Graph, nx.Graph, nx.Graph]]): A dictionary
         mapping rule names to tuples of (L, R, K) graphs.
         - reindex (bool): If true, reindex node IDs based on the L graph sequence.
+        - explicit_hydrogen (bool): Whether to explicitly include hydrogen atoms in the output.
+
 
         Returns:
         - Dict[str, str]: A dictionary mapping rule names to their GML string
         representations.
         """
         L, R, K = graph_rules
+        if explicit_hydrogen:
+            K = expand_hydrogens(K)
         if reindex:
             # Create an index mapping from L graph
             index_mapping = {
@@ -164,5 +194,7 @@ class NXToGML:
             R = nx.relabel_nodes(R, index_mapping)
             K = nx.relabel_nodes(K, index_mapping)
         changed_node_ids = NXToGML._find_changed_nodes(L, R, attributes)
-        rule_grammar = NXToGML._rule_grammar(L, R, K, rule_name, changed_node_ids)
+        rule_grammar = NXToGML._rule_grammar(
+            L, R, K, rule_name, changed_node_ids, explicit_hydrogen
+        )
         return rule_grammar
