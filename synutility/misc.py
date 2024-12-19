@@ -1,6 +1,8 @@
 import random
 from typing import Dict, List, Optional
 from datetime import datetime
+import networkx as nx
+from typing import Iterable
 
 
 def stratified_random_sample(
@@ -87,3 +89,93 @@ def calculate_processing_time(start_time_str: str, end_time_str: str) -> float:
     duration = end_time - start_time
 
     return duration.total_seconds()
+
+
+def remove_explicit_hydrogen(
+    Graph: nx.Graph, excluded_indices: Iterable[int]
+) -> nx.Graph:
+    """
+    Processes a molecular graph by calculating hydrogen count ('h_count') for each node and
+    removing hydrogen nodes that are not specified in the excluded indices.
+
+    Parameters
+    ----------
+    Graph : nx.Graph
+        The input graph with nodes expected to have an 'element' attribute.
+    excluded_indices : Iterable[int]
+        Indices of hydrogen nodes to be preserved and excluded from 'h_count' calculations.
+
+    Returns
+    -------
+    nx.Graph
+        The modified graph where each node has an 'h_count' attribute indicating the count
+        of hydrogen neighbors, and specific hydrogens have been removed unless listed in
+        excluded_indices.
+
+    Notes
+    -----
+    This function operates on a copy of the input graph and does not alter the original.
+    """
+    G = Graph.copy()
+
+    # Calculate h_count for each node
+    for node in list(G.nodes):
+        h_count = 0
+        for neighbor in G.neighbors(node):
+            if (
+                G.nodes[neighbor].get("element") == "H"
+                and neighbor not in excluded_indices
+            ):
+                h_count += 1
+        G.nodes[node]["hcount"] = h_count
+
+    # Remove hydrogen nodes not in excluded indices
+    nodes_to_remove = [
+        n
+        for n in G.nodes
+        if G.nodes[n].get("element") == "H" and n not in excluded_indices
+    ]
+    G.remove_nodes_from(nodes_to_remove)
+
+    return G
+
+
+def fix_implicit_hydrogen(Graph: nx.Graph, indices: Iterable[int]) -> nx.Graph:
+    """
+    Adjusts the 'h_count' attribute of specific nodes in a molecular graph,
+    decreasing it based on the presence of neighboring hydrogen atoms that are also
+    included in the specified indices. This function works on a copy
+    of the provided graph and returns the modified copy.
+
+    Parameters
+    ----------
+    - Graph (nx.Graph): The input graph where nodes have an 'element' attribute
+    and possibly an 'hcount'.
+    - indices (Iterable[int]): Indices of nodes to check for neighboring hydrogen atoms
+    that are also in the indices list.
+
+    Returns
+    -------
+    - nx.Graph: A modified copy of the original graph with adjusted
+    'hcount' for specific nodes.
+
+    Notes
+    -----
+    Ensure the 'hcount' exists and is appropriately structured before using this
+    function. It is assumed that 'hcount' is a mutable integer that can be directly
+    decremented.
+    """
+    G = Graph.copy()  # Work on a copy of the graph to preserve the original
+    valid_indices = set(indices).intersection(
+        G.nodes
+    )  # Ensure node indices exist in the graph
+
+    for node in valid_indices:
+        if "hcount" in G.nodes[node]:  # Ensure the node has an 'h_count' to modify
+            for neighbor in G.neighbors(node):
+                # Check if neighbor is hydrogen and also in indices
+                if G.nodes[neighbor].get("element") == "H" and neighbor in indices:
+                    if G.nodes[node].get("element") != "H":
+                        G.nodes[node]["hcount"] -= 1
+
+    return G

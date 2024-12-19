@@ -110,6 +110,7 @@ class MolToGraph:
         mol: Chem.Mol,
         drop_non_aam: Optional[bool] = False,
         light_weight: Optional[bool] = False,
+        use_index_as_atom_map: Optional[bool] = False,
     ) -> nx.Graph:
         """
         Converts an RDKit molecule object to a NetworkX graph with specified atom and bond
@@ -119,66 +120,127 @@ class MolToGraph:
         Parameters:
         - mol (Chem.Mol): An RDKit molecule object.
         - drop_non_aam (bool, optional): If True, nodes without atom mapping numbers will
-          be dropped.
+          be dropped. This option is useful for focusing on labeled parts of a molecule.
         - light_weight (bool, optional): If True, creates a graph with minimal attributes.
+          This option is useful for reducing memory footprint or simplifying the graph.
+        - use_index_as_atom_map (bool, optional): If True, uses the index of atoms as
+        atom map numbers, otherwise uses existing atom map numbers or indices if not set.
+
+        Raises:
+        - ValueError: If `drop_non_aam` and `use_index_as_atom_map` are not both True or
+        both False.
 
         Returns:
         - nx.Graph: A NetworkX graph representing the molecule.
         """
+
+        if drop_non_aam and not use_index_as_atom_map:
+            raise ValueError(
+                "drop_non_aam and use_index_as_atom_map must be both False or both True."
+            )
+
         if light_weight:
-            return cls._create_light_weight_graph(mol, drop_non_aam)
+            return cls._create_light_weight_graph(
+                mol, drop_non_aam, use_index_as_atom_map
+            )
         else:
-            return cls._create_detailed_graph(mol, drop_non_aam)
+            return cls._create_detailed_graph(mol, drop_non_aam, use_index_as_atom_map)
 
     @classmethod
-    def _create_light_weight_graph(cls, mol: Chem.Mol, drop_non_aam: bool) -> nx.Graph:
+    def _create_light_weight_graph(
+        cls,
+        mol: Chem.Mol,
+        drop_non_aam: bool = False,
+        use_index_as_atom_map: bool = False,
+    ) -> nx.Graph:
         graph = nx.Graph()
+
         for atom in mol.GetAtoms():
-            atom_map = atom.GetAtomMapNum()
-            if drop_non_aam and atom_map == 0:
-                continue
+            if use_index_as_atom_map:
+                # Use the atom map number if present; otherwise, use index + 1
+                atom_id = (
+                    atom.GetAtomMapNum()
+                    if atom.GetAtomMapNum() != 0
+                    else atom.GetIdx() + 1
+                )
+            else:
+                # Always use index + 1
+                atom_id = atom.GetIdx() + 1
+
+            if drop_non_aam and atom.GetAtomMapNum() == 0:
+                continue  # Skip atoms without atom map numbers if drop_non_aam is True
+
             graph.add_node(
-                atom_map,
-                element=atom.GetSymbol(),
+                atom_id,
+                element=atom.GetSymbol(),  # Store atom's element symbol
                 aromatic=atom.GetIsAromatic(),
                 hcount=atom.GetTotalNumHs(),
                 charge=atom.GetFormalCharge(),
                 neighbors=sorted(
                     neighbor.GetSymbol() for neighbor in atom.GetNeighbors()
                 ),
-                atom_map=atom_map,
+                atom_map=atom.GetAtomMapNum(),
             )
+
+            # Handle edges based on atom IDs and consistency checks
             for bond in atom.GetBonds():
                 neighbor = bond.GetOtherAtom(atom)
-                neighbor_map = neighbor.GetAtomMapNum()
-                if not drop_non_aam or neighbor_map != 0:
-                    graph.add_edge(
-                        atom_map, neighbor_map, order=bond.GetBondTypeAsDouble()
+                if use_index_as_atom_map:
+                    # Use the atom map number if present; otherwise, use index + 1
+                    neighbor_id = (
+                        neighbor.GetAtomMapNum()
+                        if neighbor.GetAtomMapNum() != 0
+                        else neighbor.GetIdx() + 1
                     )
+                else:
+                    # Always use index + 1 for the neighbor
+                    neighbor_id = neighbor.GetIdx() + 1
+
+                if not drop_non_aam or neighbor.GetAtomMapNum() != 0:
+                    graph.add_edge(
+                        atom_id, neighbor_id, order=bond.GetBondTypeAsDouble()
+                    )
+
         return graph
 
     @classmethod
-    def _create_detailed_graph(cls, mol: Chem.Mol, drop_non_aam: bool) -> nx.Graph:
+    def _create_detailed_graph(
+        cls,
+        mol: Chem.Mol,
+        drop_non_aam: bool = True,
+        use_index_as_atom_map: bool = True,
+    ) -> nx.Graph:
         cls.add_partial_charges(mol)  # Compute charges if not already present
         graph = nx.Graph()
-        index_to_class = {}
-        if not cls.has_atom_mapping(mol):
-            mol = cls.random_atom_mapping(mol)
+        index_to_id = {}
 
         for atom in mol.GetAtoms():
-            atom_map = atom.GetAtomMapNum()
-            if drop_non_aam and atom_map == 0:
-                continue
+            if use_index_as_atom_map:
+                # Use the atom map number if present; otherwise, use index + 1
+                atom_id = (
+                    atom.GetAtomMapNum()
+                    if atom.GetAtomMapNum() != 0
+                    else atom.GetIdx() + 1
+                )
+            else:
+                # Always use index + 1
+                atom_id = atom.GetIdx() + 1
+
+            if drop_non_aam and atom.GetAtomMapNum() == 0:
+                continue  # Skip atoms without atom map numbers if drop_non_aam is True
+
             props = cls._gather_atom_properties(atom)
-            index_to_class[atom.GetIdx()] = atom_map
-            graph.add_node(atom_map, **props)
+            index_to_id[atom.GetIdx()] = atom_id
+            graph.add_node(atom_id, **props)
 
         for bond in mol.GetBonds():
-            begin_atom_map = index_to_class.get(bond.GetBeginAtomIdx())
-            end_atom_map = index_to_class.get(bond.GetEndAtomIdx())
-            if begin_atom_map and end_atom_map:
+            begin_atom_id = index_to_id.get(bond.GetBeginAtomIdx())
+            end_atom_id = index_to_id.get(bond.GetEndAtomIdx())
+
+            if begin_atom_id and end_atom_id:
+                # Apply consistent ID handling for edges
                 graph.add_edge(
-                    begin_atom_map, end_atom_map, **cls._gather_bond_properties(bond)
+                    begin_atom_id, end_atom_id, **cls._gather_bond_properties(bond)
                 )
 
         return graph
