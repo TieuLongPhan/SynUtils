@@ -1,7 +1,8 @@
 import os
+import torch
 from typing import List
 from synutility.SynIO.debug import setup_logging
-import torch
+
 from mod import smiles, ruleGMLString, DG, config
 
 logger = setup_logging()

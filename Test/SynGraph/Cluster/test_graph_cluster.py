@@ -12,8 +12,6 @@ class TestRCCluster(unittest.TestCase):
         # Load data once for all tests
         cls.graphs = load_from_pickle("Data/Testcase/graph.pkl.gz")
         for value in cls.graphs:
-            # value["RC"] = value["GraphRules"][2]
-            # value["ITS"] = value["ITSGraph"][2]
             value = GraphDescriptor.get_descriptors(value)
         cls.clusterer = GraphCluster()
 
@@ -130,7 +128,7 @@ class TestRCCluster(unittest.TestCase):
         # Compare results to check which attribute took the least/most time
         min_time_attr = min(results, key=results.get)
         max_time_attr = max(results, key=results.get)
-        self.assertIn(min_time_attr, ["atom_count", "Signature"])
+        self.assertIn(min_time_attr, ["Atom_count", "Signature"])
         self.assertIn(max_time_attr, ["None", "Cycles"])
 
 
