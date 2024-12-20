@@ -104,14 +104,75 @@ def filter_context(context_lines, relevant_nodes):
     return filtered_context
 
 
-def strip_context(gml_text: str) -> str:
+# def strip_context(gml_text: str) -> str:
+#     """
+#     Filters the 'context' section of GML-like content to remove hydrogen nodes
+#     that do not appear in both 'left' and 'right' sections, along with their edges.
+#     Preserves the original structure and formatting of the GML.
+
+#     Parameters:
+#     - gml_text (str): GML-like content describing a chemical reaction rule.
+
+#     Returns:
+#     - str: The modified GML content with the filtered 'context' section.
+#     """
+#     lines = gml_text.split("\n")
+
+#     # Locate main sections: rule, left, context, right
+#     rule_start, rule_end = find_block(lines, "rule [")
+#     left_start, left_end = find_block(lines, "left [")
+#     context_start, context_end = find_block(lines, "context [")
+#     right_start, right_end = find_block(lines, "right [")
+
+#     # If we cannot find proper structure, return original text
+#     if any(
+#         x is None
+#         for x in [
+#             rule_start,
+#             rule_end,
+#             left_start,
+#             left_end,
+#             context_start,
+#             context_end,
+#             right_start,
+#             right_end,
+#         ]
+#     ):
+#         return gml_text
+
+#     # fmt: off
+#     left_lines = lines[left_start: left_end + 1]
+#     context_lines = lines[context_start: context_end + 1]
+#     right_lines = lines[right_start: right_end + 1]
+#     # fmt: on
+
+#     # Determine relevant nodes by intersection of nodes in left and right edges
+#     left_nodes = get_nodes_from_edges(left_lines)
+#     right_nodes = get_nodes_from_edges(right_lines)
+#     relevant_nodes = left_nodes.intersection(right_nodes)
+
+#     # Filter the context section
+#     filtered_context = filter_context(context_lines, relevant_nodes)
+
+#     # Rebuild the full GML text
+#     # Replace the original context lines with the filtered context lines
+#     # fmt: off
+#     new_lines = lines[:context_start] + filtered_context + lines[context_end + 1:]
+#     # fmt: on
+
+#     return "\n".join(new_lines)
+
+
+def strip_context(gml_text: str, remove_all: bool = True) -> str:
     """
-    Filters the 'context' section of GML-like content to remove hydrogen nodes
-    that do not appear in both 'left' and 'right' sections, along with their edges.
-    Preserves the original structure and formatting of the GML.
+    Filters or clears the 'context' section of GML-like content based on the remove_all flag.
+    If remove_all is True, all edges in the 'context' section are removed.
+    If False, it removes hydrogen nodes that do not appear in both 'left' and 'right' sections,
+    along with their edges, while preserving the original structure and formatting of the GML.
 
     Parameters:
     - gml_text (str): GML-like content describing a chemical reaction rule.
+    - remove_all (bool): Flag to determine if all edges should be removed from the 'context'.
 
     Returns:
     - str: The modified GML content with the filtered 'context' section.
@@ -141,21 +202,28 @@ def strip_context(gml_text: str) -> str:
         return gml_text
 
     # fmt: off
-    left_lines = lines[left_start: left_end + 1]
     context_lines = lines[context_start: context_end + 1]
-    right_lines = lines[right_start: right_end + 1]
-    # fmt: on
 
     # Determine relevant nodes by intersection of nodes in left and right edges
-    left_nodes = get_nodes_from_edges(left_lines)
-    right_nodes = get_nodes_from_edges(right_lines)
+    left_nodes = get_nodes_from_edges(lines[left_start: left_end + 1])
+    right_nodes = get_nodes_from_edges(lines[right_start: right_end + 1])
+    # fmt: on
     relevant_nodes = left_nodes.intersection(right_nodes)
 
-    # Filter the context section
+    # Filter the context section based on relevant nodes
     filtered_context = filter_context(context_lines, relevant_nodes)
 
+    if remove_all:
+        # Remove all edges from the context
+        # Retain only node lines and other structural lines
+        final_context = []
+        for line in filtered_context:
+            if not EDGE_REGEX.search(line.strip()):
+                final_context.append(line)
+        filtered_context = final_context
+
     # Rebuild the full GML text
-    # Replace the original context lines with the filtered context lines
+    # Replace the original context lines with the filtered or cleared context lines
     # fmt: off
     new_lines = lines[:context_start] + filtered_context + lines[context_end + 1:]
     # fmt: on
