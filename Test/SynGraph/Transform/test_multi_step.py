@@ -2,7 +2,6 @@ import unittest
 from synutility.SynIO.Format.chemical_conversion import smart_to_gml
 from synutility.SynGraph.Transform.multi_step import (
     perform_multi_step_reaction,
-    remove_reagent_from_smiles,
     calculate_max_depth,
     find_all_paths,
 )
@@ -25,10 +24,6 @@ class TestMultiStep(unittest.TestCase):
         self.gml = [smart_to_gml(value) for value in smarts]
         self.order = [0, 1, 0, -1]
         self.rsmi = "CC=O.CC=O.CCC=O>>CC=O.CC=C(C)C=O.O"
-
-    def test_remove_reagent_from_smiles(self):
-        rsmi = remove_reagent_from_smiles(self.rsmi)
-        self.assertEqual(rsmi, "CC=O.CCC=O>>CC=C(C)C=O.O")
 
     def test_perform_multi_step_reaction(self):
         results, _ = perform_multi_step_reaction(self.gml, self.order, self.rsmi)

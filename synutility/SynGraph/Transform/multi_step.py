@@ -1,68 +1,8 @@
-from collections import Counter
 from typing import List, Dict, Tuple
 from synutility.SynChem.Reaction.standardize import Standardize
 from synutility.SynGraph.Transform.core_engine import CoreEngine
 
 std = Standardize()
-
-
-def remove_reagent_from_smiles(rsmi: str) -> str:
-    """
-    Removes common molecules from the reactants and products in a SMILES reaction string.
-
-    This function identifies the molecules that appear on both sides of the reaction
-    (reactants and products) and removes one occurrence of each common molecule from
-    both sides.
-
-    Parameters:
-    - rsmi (str): A SMILES string representing a chemical reaction in the form:
-    'reactant1.reactant2...>>product1.product2...'
-
-    Returns:
-    - str: A new SMILES string with the common molecules removed, in the form:
-    'reactant1.reactant2...>>product1.product2...'
-
-    Example:
-    >>> remove_reagent_from_smiles('CC=O.CC=O.CCC=O>>CC=CO.CC=O.CC=O')
-    'CCC=O>>CC=CO'
-    """
-
-    # Split the input SMILES string into reactants and products
-    reactants, products = rsmi.split(">>")
-
-    # Split the reactants and products by '.' to separate molecules
-    reactant_molecules = reactants.split(".")
-    product_molecules = products.split(".")
-
-    # Count the occurrences of each molecule in reactants and products
-    reactant_count = Counter(reactant_molecules)
-    product_count = Counter(product_molecules)
-
-    # Find common molecules between reactants and products
-    common_molecules = set(reactant_count) & set(product_count)
-
-    # Remove common molecules by the minimum occurrences in both reactants and products
-    for molecule in common_molecules:
-        common_occurrences = min(reactant_count[molecule], product_count[molecule])
-
-        # Decrease the count by the common occurrences
-        reactant_count[molecule] -= common_occurrences
-        product_count[molecule] -= common_occurrences
-
-    # Rebuild the lists of reactant and product molecules after removal
-    filtered_reactant_molecules = [
-        molecule for molecule, count in reactant_count.items() for _ in range(count)
-    ]
-    filtered_product_molecules = [
-        molecule for molecule, count in product_count.items() for _ in range(count)
-    ]
-
-    # Join the remaining molecules back into SMILES strings
-    new_reactants = ".".join(filtered_reactant_molecules)
-    new_products = ".".join(filtered_product_molecules)
-
-    # Return the updated reaction string
-    return f"{new_reactants}>>{new_products}"
 
 
 def perform_multi_step_reaction(
@@ -173,6 +113,56 @@ def calculate_max_depth(reaction_tree, current_node=None, depth=0):
     return max_subtree_depth
 
 
+# def find_all_paths(
+#     reaction_tree,
+#     target_products,
+#     current_node,
+#     target_depth,
+#     current_depth=0,
+#     path=None,
+# ):
+#     """
+#     Recursively find all paths from the root to the maximum depth in the reaction tree.
+
+#     Parameters:
+#     - reaction_tree (dict): A dictionary of reaction SMILES with products.
+#     - current_node (str): The current node (reaction SMILES).
+#     - target_depth (int): The depth at which the product matches the root's product.
+#     - current_depth (int): The current depth of the search.
+#     - path (list): The current path in the tree.
+
+#     Returns:
+#     - List of all paths to the max depth.
+#     """
+#     if path is None:
+#         path = []
+
+#     # Add the current node (reaction SMILES) to the path
+#     path.append(current_node)
+
+#     # If we have reached the target depth, check the product
+#     if current_depth == target_depth:
+#         # Extract products of the current node
+#         products = sorted(current_node.split(">>")[1].split("."))
+#         return [path] if products == target_products else []
+
+#     # If we haven't reached the target depth, recurse on the products
+#     paths = []
+#     for product in reaction_tree.get(current_node, []):
+#         paths.extend(
+#             find_all_paths(
+#                 reaction_tree,
+#                 target_products,
+#                 product,
+#                 target_depth,
+#                 current_depth + 1,
+#                 path.copy(),
+#             )
+#         )
+
+#     return paths
+
+
 def find_all_paths(
     reaction_tree,
     target_products,
@@ -203,8 +193,23 @@ def find_all_paths(
     # If we have reached the target depth, check the product
     if current_depth == target_depth:
         # Extract products of the current node
-        products = sorted(current_node.split(">>")[1].split("."))
-        return [path] if products == target_products else []
+        current_products = sorted(
+            current_node.split(">>")[1].split("."), key=len
+        )  # Sort by length of SMILES
+        largest_current_product = current_products[-1] if current_products else None
+
+        # Process target_products to get the largest product
+
+        sorted_target_products = sorted(
+            target_products, key=len
+        )  # target_products should be a string here
+
+        largest_target_product = (
+            sorted_target_products[-1] if sorted_target_products else None
+        )
+
+        # Compare the largest elements
+        return [path] if largest_current_product == largest_target_product else []
 
     # If we haven't reached the target depth, recurse on the products
     paths = []
@@ -219,5 +224,4 @@ def find_all_paths(
                 path.copy(),
             )
         )
-
     return paths

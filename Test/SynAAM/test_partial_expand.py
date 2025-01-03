@@ -18,13 +18,13 @@ class TestPartialExpand(unittest.TestCase):
             "[CH2:1]=[CH:2][CH3:3].[H:4][H:5]>>[CH2:1]([CH:2]([CH3:3])[H:5])[H:4]"
         )
         # Perform the expansion
-        output_rsmi = PartialExpand.expand(input_rsmi)
+        output_rsmi = PartialExpand.expand_aam_with_transform(input_rsmi)
         # Assert the result matches the expected output
         self.assertTrue(AAMValidator.smiles_check(output_rsmi, expected_rsmi, "ITS"))
 
     def test_expand_2(self):
         input_rsmi = "CC[CH2:3][Cl:1].[NH2:2][H:4]>>CC[CH2:3][NH2:2].[Cl:1][H:4]"
-        output_rsmi = PartialExpand.expand(input_rsmi)
+        output_rsmi = PartialExpand.expand_aam_with_transform(input_rsmi)
         expected_rsmi = (
             "[CH3:1][CH2:2][CH2:3][Cl:4].[NH2:5][H:6]"
             + ">>[CH3:1][CH2:2][CH2:3][NH2:5].[Cl:4][H:6]"

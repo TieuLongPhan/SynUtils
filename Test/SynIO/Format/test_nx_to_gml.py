@@ -48,7 +48,9 @@ class TestRuleWriting(unittest.TestCase):
         L, R, K = self.data["GraphRules"]
         changed_node_ids = NXToGML._find_changed_nodes(L, R, ["charge"])
         rule_name = "test_rule"
-        gml_str = NXToGML._rule_grammar(L, R, K, rule_name, changed_node_ids)
+        gml_str = NXToGML._rule_grammar(
+            L, R, K, rule_name, changed_node_ids, explicit_hydrogen=False
+        )
         expected_str = (
             "rule [\n"
             '   ruleID "test_rule"\n'
