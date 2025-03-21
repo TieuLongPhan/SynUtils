@@ -146,7 +146,8 @@ class GraphCluster:
           identification.
         """
         if isinstance(data[0][rule_key], str):
-            rules = [strip_context(entry[rule_key]) for entry in data]
+            # rules = [strip_context(entry[rule_key]) for entry in data]
+            rules = [entry[rule_key] for entry in data]
         else:
             rules = [entry[rule_key] for entry in data]
 

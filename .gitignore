@@ -9,3 +9,5 @@ test_format.py
 *dev_zone
 test_format.py
 ITS_graphs.pkl.gz
+*.pkl.gz
+*.json.gz
